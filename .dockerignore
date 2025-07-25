@@ -1,0 +1,28 @@
+# ⛔ Python bytecode/cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ⛔ Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# ⛔ Git & version control
+.git/
+.gitignore
+
+# ⛔ Local virtual environments
+sns_env/
+.venv/
+*.venv
+env/
+ENV/
+
+# ⛔ OS metadata
+.DS_Store
+Thumbs.db
+
+# ⛔ IDE folders
+.vscode/
+.idea/
+
+# ✅ Everything else will be included (exports, cheatsheets, notebooks, etc.)

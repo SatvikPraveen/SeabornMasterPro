@@ -1,0 +1,53 @@
+# 🌱 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# 🧪 Virtual Environments
+sns_env/
+.venv/
+env/
+ENV/
+*.venv
+
+# 🧠 Jupyter Checkpoints
+.ipynb_checkpoints/
+
+# 🗃️ OS Metadata
+.DS_Store
+Thumbs.db
+
+# 💻 IDE Configs
+.vscode/
+.idea/
+
+# 🐍 Python build artifacts
+*.egg-info/
+dist/
+build/
+
+# 🔐 Environment and credentials
+.env
+*.env
+
+# 🚫 Logs & runtime files
+*.log
+
+# 📦 Cache
+*.cache/
+__pypackages__/
+
+# 🧪 Pytest cache
+.pytest_cache/
+
+# 🧰 Temporary Notebooks
+notebooks/tmp_*.ipynb
+
+# 🧪 MyPy / coverage
+.mypy_cache/
+.coverage
+htmlcov/
+
+# ⛔ Docker build context
+docker-compose.override.yml
