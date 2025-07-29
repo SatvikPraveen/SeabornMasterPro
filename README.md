@@ -86,7 +86,8 @@ SeabornMasterPro/
 ├── cheatsheets/             # Markdown cheatsheets
 │   └── seaborn_cheatsheet.md
 ├── streamlit_app.py         # Interactive EDA dashboard
-├── requirements.txt         # Project dependencies
+├── requirements.txt         # Minimal dependencies to run the project
+├── requirements_dev.txt     # Full dev environment
 ├── Dockerfile               # Container setup
 ├── .dockerignore
 ├── .gitignore
