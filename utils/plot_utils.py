@@ -195,16 +195,20 @@ def add_statistical_annotations(ax, x1, x2, y, p_value, height=0.05):
 # -------------------------------
 # 💾 10. Export Plot Data
 # -------------------------------
-def export_plot_data(data, filename, format='csv'):
+def export_plot_data(fig, data, filename, format='csv'):
     """
     Save the data underlying a plot.
    
     Args:
+        fig: Figure object (can be None for data-only export)
         data: DataFrame or dict
         filename: Output filename
         format: 'csv', 'xlsx', or 'json'
     """
     import pandas as pd
+   
+    if data is None:
+        return
    
     if not isinstance(data, pd.DataFrame):
         data = pd.DataFrame(data)
@@ -226,23 +230,24 @@ def export_plot_data(data, filename, format='csv'):
 # -------------------------------
 # 📄 11. Save Publication-Ready Figure
 # -------------------------------
-def save_publication_figure(filename, dpi=600, formats=['png', 'pdf'], transparent=False):
+def save_publication_figure(fig, filename, formats=['png', 'pdf'], dpi=600, transparent=False):
     """
     Save figure in multiple formats for publication.
    
     Args:
+        fig: Matplotlib figure object to save
         filename: Base filename (without extension)
-        dpi: Resolution (600 or 300 for publications)
         formats: List of formats to save ('png', 'pdf', 'svg')
+        dpi: Resolution (600 or 300 for publications)
         transparent: Transparent background
     """
     for fmt in formats:
         output_file = f"{filename}.{fmt}"
-        folder = os.path.dirname(output_file)
+        folder = os.path.dirname(str(output_file))
         if folder and not os.path.exists(folder):
             os.makedirs(folder, exist_ok=True)
        
-        plt.savefig(output_file, dpi=dpi, bbox_inches='tight', 
+        fig.savefig(output_file, dpi=dpi, bbox_inches='tight', 
                    transparent=transparent, format=fmt)
         print(f"✅ Saved: {output_file}")
 

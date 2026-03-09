@@ -200,7 +200,7 @@ def create_journal_barplot(data: pd.DataFrame, output_dir: Path,
     
     # Add value labels on bars
     for container in ax.containers:
-        ax.bar_label(container, fmt='%.1f', padding=3, fontsize=7)
+        ax.bar_label(container, fmt='%.1f', padding=3, fontsize=7)  # type: ignore[arg-type]
     
     plt.tight_layout()
     
@@ -259,7 +259,7 @@ def create_heatmap_publication(data: pd.DataFrame, output_dir: Path,
     
     # Calculate correlation
     numeric_cols = ['total_bill', 'tip', 'size']
-    corr = data[numeric_cols].corr()
+    corr = data[numeric_cols].corr()  # type: ignore[call-arg]
     
     # Create heatmap
     sns.heatmap(

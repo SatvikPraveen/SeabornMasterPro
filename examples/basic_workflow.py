@@ -107,7 +107,7 @@ def create_correlation_heatmap(df: pd.DataFrame, output_dir: Path) -> None:
         return
     
     plt.figure(figsize=(10, 8))
-    correlation_matrix = df[numeric_cols].corr()
+    correlation_matrix = df[numeric_cols].corr()  # type: ignore[call-arg]
     
     sns.heatmap(
         correlation_matrix,

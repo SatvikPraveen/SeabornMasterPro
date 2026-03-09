@@ -100,7 +100,7 @@ class TestExportPlotData:
         data = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})
         output_path = tmp_path / "data.csv"
        
-        export_plot_data(data, str(output_path), format='csv')
+        export_plot_data(None, data, str(output_path), format='csv')
        
         assert output_path.exists()
         loaded = pd.read_csv(output_path)
@@ -111,7 +111,7 @@ class TestExportPlotData:
         data = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})
         output_path = tmp_path / "data.json"
        
-        export_plot_data(data, str(output_path), format='json')
+        export_plot_data(None, data, str(output_path), format='json')
        
         assert output_path.exists()
    
@@ -120,7 +120,7 @@ class TestExportPlotData:
         data = {'A': [1, 2, 3], 'B': [4, 5, 6]}
         output_path = tmp_path / "data.csv"
        
-        export_plot_data(data, str(output_path))
+        export_plot_data(None, data, str(output_path))
        
         assert output_path.exists()
 
@@ -185,7 +185,7 @@ class TestIntegration:
        
         # Export data
         data_path = tmp_path / "data.csv"
-        export_plot_data(sample_data, str(data_path))
+        export_plot_data(None, sample_data, str(data_path))
        
         # Verify
         assert output_path.exists()

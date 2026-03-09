@@ -19,8 +19,9 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# 💻 IDE Configs (keeping .vscode/ for project settings)
+# 💻 IDE Configs
 .idea/
+.vscode/
 
 # 🐍 Python build artifacts
 *.egg-info/

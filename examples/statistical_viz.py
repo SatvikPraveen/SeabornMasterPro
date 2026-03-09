@@ -182,8 +182,9 @@ def create_statistical_annotations_demo(data: pd.DataFrame, output_dir: Path):
         ax=ax
     )
     
-    # Add statistical annotations
-    add_statistical_annotations(ax, data, 'Category', 'Value')
+    # Add example significance annotation between categories A and B
+    # In production, calculate actual p-values from your statistical test
+    add_statistical_annotations(ax, x1=0, x2=1, y=data['Value'].max() * 1.1, p_value=0.03)
     
     ax.set_title("Statistical Significance Testing", fontweight='bold', fontsize=14)
     ax.set_ylabel("Value (with significance markers)")

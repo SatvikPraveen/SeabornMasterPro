@@ -20,6 +20,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.gridspec import GridSpec
+from matplotlib.figure import Figure
 
 # Add utils to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "utils"))
@@ -132,8 +133,8 @@ class DashboardGenerator:
         payment_counts = self.data["Payment Method"].value_counts()
         colors = sns.color_palette("Set2", len(payment_counts))
         ax5.pie(
-            payment_counts.values,
-            labels=payment_counts.index,
+            payment_counts.values,  # type: ignore[arg-type]
+            labels=payment_counts.index.tolist(),  # type: ignore[arg-type]
             autopct='%1.1f%%',
             colors=colors,
             startangle=90
@@ -164,7 +165,7 @@ class DashboardGenerator:
             
             # Correlation heatmap
             ax3 = fig.add_subplot(gs[1, 0])
-            corr = self.data[numeric_cols].corr()
+            corr = self.data[numeric_cols].corr()  # type: ignore[call-arg]
             sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm", ax=ax3, center=0)
             ax3.set_title("Correlation Matrix", fontweight='bold')
             
@@ -175,7 +176,7 @@ class DashboardGenerator:
         
         return fig
         
-    def generate(self, dataset_type: str = "ecommerce") -> plt.Figure:
+    def generate(self, dataset_type: str = "ecommerce") -> Figure:
         """Generate appropriate dashboard based on dataset type."""
         if dataset_type == "ecommerce":
             return self.create_ecommerce_dashboard()
