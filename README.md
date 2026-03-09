@@ -58,15 +58,19 @@ By working through this project, you'll be able to:
 
 ```bash
 SeabornMasterPro/
-├── notebooks/               # Modular notebooks (merged logically)
+├── notebooks/               # Comprehensive coverage (10 notebooks)
 │   ├── 01_setup_and_basics.ipynb
 │   ├── 02_distributions_relationships.ipynb
 │   ├── 03_categorical_matrixplots.ipynb
 │   ├── 04_multi_custom_dashboards.ipynb
 │   ├── 05_realworld_EDA.ipynb
-│   └── 06_timeseries_lineplots.ipynb
-├── utils/                   # Reusable helper functions
-│   └── plot_utils.py        # Theme, save_fig, annotate, format_date_axis, etc.
+│   ├── 06_timeseries_lineplots.ipynb
+│   ├── 07_figure_level_functions.ipynb
+│   ├── 08_advanced_categorical.ipynb
+│   ├── 09_styling_customization.ipynb
+│   └── 10_statistical_parameters.ipynb
+├── utils/                   # Enhanced utility functions
+│   └── plot_utils.py        # 12 functions: themes, export, palettes, grids, annotations
 ├── scripts/                 # Dataset generators and helpers
 │   └── generate_datasets.py
 ├── datasets/                # Synthetic datasets (auto-generated)
@@ -76,17 +80,31 @@ SeabornMasterPro/
 │   ├── sales_data.csv
 │   ├── student_scores.csv
 │   └── web_traffic.csv
-├── exports/                 # Saved visuals & reports
-│   ├── 01_basics/
-│   ├── 02_distributions/
-│   ├── 03_categorical/
-│   ├── 04_dashboards/
-│   ├── 05_realworld/
-│   └── 06_timeseries/
+├── exports/                 # Saved visuals for all 10 notebooks
+│   ├── 01_setup/ ... 06_timeseries/
+│   ├── 07_figure_level/
+│   ├── 08_categorical/
+│   ├── 09_styling/
+│   └── 10_statistical/
+├── docs/                    # Comprehensive documentation
+│   ├── best_practices.md
+│   ├── plot_comparison.md
+│   ├── troubleshooting.md
+│   └── feature_matrix.md
+├── tests/                   # Testing infrastructure
+│   ├── __init__.py
+│   └── test_plot_utils.py
+├── .github/                 # GitHub templates and workflows
+│   ├── workflows/
+│   │   └── test.yml
+│   ├── ISSUE_TEMPLATE/
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── cheatsheets/             # Markdown cheatsheets
 │   └── seaborn_cheatsheet.md
-├── streamlit_app.py         # Interactive EDA dashboard
-├── requirements.txt         # Minimal dependencies to run the project
+├── streamlit_app.py         # Interactive dashboard (all 10 notebooks)
+├── setup.py                 # Package installation
+├── pytest.ini               # Test configuration
+├── requirements.txt         # Minimal dependencies
 ├── requirements_dev.txt     # Full dev environment
 ├── Dockerfile               # Container setup
 ├── .dockerignore
@@ -99,13 +117,20 @@ SeabornMasterPro/
 
 ## 🌟 Features
 
-- 📘 **Modular notebooks** for each topic
-- 📊 Full Seaborn coverage: `histplot`, `kdeplot`, `scatterplot`, `heatmap`, `pairplot`, `catplot`, `FacetGrid`, and more
-- 🎨 Unified visual style via `plot_utils.py`
+- 📘 **10 comprehensive notebooks** covering all Seaborn functionality
+- 📊 **100% Seaborn coverage**: All 30+ core functions including `relplot`, `displot`, `catplot`, `jointplot`, `lmplot`, `FacetGrid`, and more
+- 🎯 **Figure-level vs Axes-level** paradigm explained in depth
+- 📊 **Advanced categorical plots**: `barplot` with custom estimators, statistical comparisons
+- 🎨 **Styling mastery**: Color theory, palettes (sequential/diverging/qualitative), themes
+- 📐 **Statistical parameters**: Deep dive into `estimator` and `errorbar` options
+- ♻️ **Enhanced utilities**: 12 reusable functions in `plot_utils.py`
+- 📚 **Comprehensive docs**: Best practices, plot comparison guide, troubleshooting, feature matrix
+- 🧪 **Testing infrastructure**: pytest with CI/CD via GitHub Actions
 - 📁 Exports saved with `save_fig()` into logical folders
 - 🗂️ Cheatsheet in Markdown for quick revision
-- 🌐 Streamlit dashboard to explore visualizations interactively
+- 🌐 Streamlit dashboard to explore all visualizations interactively
 - 🐳 Docker support for full reproducibility
+- 📦 **Pip-installable**: `pip install -e .`
 
 ---
 
@@ -116,8 +141,15 @@ SeabornMasterPro/
 - [x] Learn categorical & matrix visualizations
 - [x] Build dashboards and multi-panel plots
 - [x] Analyze real-world synthetic datasets
-- [x] Use `.pipe()` and `plot_utils.py` for reusability
-- [x] Run everything inside Docker or via Streamlit
+- [x] Master figure-level functions (relplot, displot, catplot, lmplot, jointplot)
+- [x] Understand axes-level vs figure-level paradigm
+- [x] Learn advanced categorical plots (barplot with custom estimators)
+- [x] Master styling and customization (themes, palettes, color theory)
+- [x] Understand statistical parameters (estimator, errorbar options)
+- [x] Use `.pipe()` and enhanced `plot_utils.py` for reusability
+- [x] Run comprehensive tests with pytest
+- [x] Explore all visualizations via Streamlit dashboard
+- [x] Run everything inside Docker for reproducibility
 
 ---
 
@@ -170,9 +202,10 @@ Want to take this further?
 
 - [ ] Add Plotly/Altair interactive options
 - [ ] Create animated visualizations
-- [ ] Add unit tests for `plot_utils.py`
-- [ ] Create `seaborn_themes.py` presets
-- [ ] Integrate other dashboards into Streamlit
+- [ ] Create `seaborn_themes.py` presets for custom themes
+- [ ] Add more interactive controls to Streamlit dashboard
+- [ ] Add benchmarking and performance comparisons
+- [ ] Create video tutorials for each notebook
 
 ---
 
@@ -190,12 +223,25 @@ Each notebook is carefully structured with:
 
 ## 📌 Topics Covered
 
-- Setup and Seaborn basics
-- Distributions and pairwise relationships
-- Categorical plots and matrix visualizations
-- Multi-panel layouts and custom dashboards
-- Real-world EDA with Titanic & Marketing Campaign
-- Time series line plots with date formatting
+### Core Notebooks
+- **01**: Setup and Seaborn basics
+- **02**: Distributions and pairwise relationships
+- **03**: Categorical plots and matrix visualizations
+- **04**: Multi-panel layouts and custom dashboards
+- **05**: Real-world EDA with Titanic & Marketing Campaign
+- **06**: Advanced time series (multi-series, confidence intervals, seasonality)
+
+### Advanced Notebooks
+- **07**: Figure-level functions (relplot, lmplot, jointplot, displot)
+- **08**: Advanced categorical plots (barplot with custom estimators)
+- **09**: Styling & customization (color theory, palettes, themes)
+- **10**: Statistical parameters (estimator, errorbar deep dive)
+
+### Documentation
+- Best practices for data visualization
+- Plot comparison and decision guide
+- Troubleshooting common issues
+- Complete feature matrix and coverage map
 
 ---
 
