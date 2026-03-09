@@ -52,7 +52,7 @@ class BatchProcessor:
             return df
         except Exception as e:
             print(f"  ⚠ Error loading {filepath.name}: {e}")
-            return None
+            return None  # type: ignore[return-value]
     
     def generate_summary_report(self, filepath: Path, df: pd.DataFrame) -> Dict:
         """Generate summary statistics for a dataset."""
@@ -118,7 +118,7 @@ class BatchProcessor:
             return
         
         plt.figure(figsize=(10, 8))
-        corr = df[numeric_cols].corr()
+        corr = df[numeric_cols].corr()  # type: ignore[call-arg]
         
         sns.heatmap(
             corr,
@@ -189,7 +189,7 @@ class BatchProcessor:
         
         df = self.load_dataset(filepath)
         if df is None:
-            return None
+            return None  # type: ignore[return-value]
         
         # Generate summary
         summary = self.generate_summary_report(filepath, df)

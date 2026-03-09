@@ -60,7 +60,7 @@ def demonstrate_themes(output_dir: Path):
     
     for idx, theme in enumerate(themes):
         ax = axes[idx]
-        sns.set_style(theme)
+        sns.set_style(theme)  # type: ignore[arg-type]
         sns.scatterplot(
             data=tips, x="total_bill", y="tip",
             hue="day", ax=ax, palette="Set2"
@@ -219,7 +219,7 @@ def demonstrate_context_scaling(output_dir: Path):
     fig = plt.figure(figsize=(16, 10))
     
     for idx, context in enumerate(contexts, 1):
-        sns.set_context(context)
+        sns.set_context(context)  # type: ignore[arg-type]
         ax = fig.add_subplot(2, 2, idx)
         sns.scatterplot(data=tips, x="total_bill", y="tip", hue="time", ax=ax)
         ax.set_title(f"Context: {context}", fontweight='bold')

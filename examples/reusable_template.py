@@ -19,6 +19,7 @@ from typing import Optional, List
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib.figure import Figure
 
 # Add utils to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "utils"))
@@ -132,7 +133,7 @@ class VisualizationPipeline:
                            y: str, 
                            hue: Optional[str] = None,
                            title: Optional[str] = None,
-                           filename: Optional[str] = None) -> plt.Figure:
+                           filename: Optional[str] = None) -> Figure:
         """
         Create a scatter plot.
         
@@ -146,6 +147,9 @@ class VisualizationPipeline:
         Returns:
             Figure object
         """
+        if self.data is None:
+            raise ValueError("Data not loaded. Call load_data() first.")
+            
         required_cols = [x, y]
         if hue:
             required_cols.append(hue)
@@ -184,7 +188,7 @@ class VisualizationPipeline:
     def create_distribution_plot(self,
                                 column: str,
                                 title: Optional[str] = None,
-                                filename: Optional[str] = None) -> plt.Figure:
+                                filename: Optional[str] = None) -> Figure:
         """
         Create a distribution plot with histogram and KDE.
         
@@ -225,7 +229,7 @@ class VisualizationPipeline:
                                y: str,
                                kind: str = 'bar',
                                title: Optional[str] = None,
-                               filename: Optional[str] = None) -> plt.Figure:
+                               filename: Optional[str] = None) -> Figure:
         """
         Create a categorical plot.
         
@@ -271,7 +275,7 @@ class VisualizationPipeline:
     
     def create_correlation_heatmap(self,
                                   title: Optional[str] = None,
-                                  filename: Optional[str] = None) -> plt.Figure:
+                                  filename: Optional[str] = None) -> Optional[Figure]:
         """
         Create correlation heatmap for numeric columns.
         
@@ -282,6 +286,10 @@ class VisualizationPipeline:
         Returns:
             Figure object
         """
+        if self.data is None:
+            logger.error("Data not loaded. Call load_data() first.")
+            return None
+            
         numeric_cols = self.data.select_dtypes(include=['number']).columns
         
         if len(numeric_cols) < 2:
@@ -323,6 +331,10 @@ class VisualizationPipeline:
         Args:
             filename: Output filename (without extension)
         """
+        if self.data is None:
+            logger.warning("No data loaded to export")
+            return
+            
         logger.info("Exporting summary statistics")
         
         summary = {
