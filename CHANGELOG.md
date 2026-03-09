@@ -49,6 +49,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Event markers with annotations
   - Faceted time series with relplot()
 
+#### Production-Ready Python Scripts (7 new files)
+- **examples/basic_workflow.py**: Complete end-to-end workflow example
+  - Command-line arguments with argparse
+  - Data loading, validation, and processing
+  - Multiple plot types (distribution, scatter, categorical, heatmap)
+  - Organized output management
+  
+- **examples/production_dashboard.py**: Multi-panel dashboard generator
+  - GridSpec layout for professional dashboards
+  - KPI summary panels
+  - E-commerce and generic dataset support
+  - Multi-format export (PNG, PDF, SVG)
+  - Timestamp and metadata tracking
+  
+- **examples/custom_styling.py**: Advanced styling demonstrations
+  - All 5 Seaborn theme comparisons
+  - Color palette types showcase
+  - Custom brand colors and accessible palettes
+  - Gradient palette creation
+  - Context scaling (paper, notebook, talk, poster)
+  
+- **examples/statistical_viz.py**: Statistical analysis and visualization
+  - Estimator comparisons (mean, median, sum, custom)
+  - Error bar types (CI, SD, SE)
+  - Bootstrap confidence interval visualization
+  - Regression with confidence bands
+  - Statistical significance annotations
+  - Custom estimator function examples
+  
+- **examples/batch_processing.py**: Batch dataset processing
+  - Automatic dataset discovery and loading
+  - Sequential and parallel processing modes
+  - Automatic plot generation per dataset
+  - Master comparison report
+  - Summary statistics export (JSON/CSV)
+  
+- **examples/publication_figures.py**: Journal-quality figure generation
+  - Pre-defined size presets (Nature, Science, journal, presentation, poster)
+  - High DPI output (150, 300, 600, 1200)
+  - Multiple format support (PNG, PDF, SVG, EPS)
+  - Font size presets for different contexts
+  - Grayscale-friendly options
+  - Size comparison grid generator
+  
+- **examples/reusable_template.py**: Production-ready template
+  - Object-oriented pipeline design
+  - Comprehensive error handling and logging
+  - Input validation
+  - CLI with argparse
+  - Multiple plot types in one script
+  - Data export functionality (JSON)
+
+- **examples/README.md**: Complete documentation for all scripts
+  - Detailed usage examples for each script
+  - Comparison table: Scripts vs Notebooks
+  - When to use which script
+  - Common patterns and pro tips
+  - Troubleshooting guide
+
 #### Enhanced Utilities (6 new functions)
 - **utils/plot_utils.py**: Expanded from 6 to 12 functions
   - `create_color_palette(palette_type, n_colors)`: Generate custom palettes by type
