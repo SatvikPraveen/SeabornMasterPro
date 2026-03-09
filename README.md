@@ -49,8 +49,7 @@ By working through this project, you'll be able to:
 
 - 📊 Visualize structured data with Seaborn’s full plotting suite
 - 🧱 Build custom dashboards using Streamlit and save visual reports
-- ♻️ Reuse plot components using `plot_utils.py`
-- 📦 Package everything in a container-ready environment
+- ♻️ Reuse plot components using `plot_utils.py`- 🐍 Deploy production-ready scripts with proper error handling- 📦 Package everything in a container-ready environment
 
 ---
 
@@ -69,7 +68,17 @@ SeabornMasterPro/
 │   ├── 08_advanced_categorical.ipynb
 │   ├── 09_styling_customization.ipynb
 │   └── 10_statistical_parameters.ipynb
+├── examples/                # Production-ready Python scripts (7 scripts)
+│   ├── basic_workflow.py
+│   ├── production_dashboard.py
+│   ├── custom_styling.py
+│   ├── statistical_viz.py
+│   ├── batch_processing.py
+│   ├── publication_figures.py
+│   ├── reusable_template.py
+│   └── README.md
 ├── utils/                   # Enhanced utility functions
+│   ├── __init__.py
 │   └── plot_utils.py        # 12 functions: themes, export, palettes, grids, annotations
 ├── scripts/                 # Dataset generators and helpers
 │   └── generate_datasets.py
@@ -118,7 +127,8 @@ SeabornMasterPro/
 ## 🌟 Features
 
 - 📘 **10 comprehensive notebooks** covering all Seaborn functionality
-- 📊 **100% Seaborn coverage**: All 30+ core functions including `relplot`, `displot`, `catplot`, `jointplot`, `lmplot`, `FacetGrid`, and more
+- � **7 production-ready Python scripts** with CLI, error handling, and logging
+- �📊 **100% Seaborn coverage**: All 30+ core functions including `relplot`, `displot`, `catplot`, `jointplot`, `lmplot`, `FacetGrid`, and more
 - 🎯 **Figure-level vs Axes-level** paradigm explained in depth
 - 📊 **Advanced categorical plots**: `barplot` with custom estimators, statistical comparisons
 - 🎨 **Styling mastery**: Color theory, palettes (sequential/diverging/qualitative), themes
@@ -193,6 +203,32 @@ streamlit run streamlit_app.py
 
 Then visit:
 🔗 [http://localhost:8501](http://localhost:8501)
+
+---
+
+## 🐍 Run Production Scripts
+
+```bash
+# Navigate to examples directory
+cd examples
+
+# Run basic workflow
+python basic_workflow.py
+
+# Create production dashboard
+python production_dashboard.py --format pdf
+
+# Generate publication figures
+python publication_figures.py --size journal_double --dpi 300
+
+# Batch process all datasets
+python batch_processing.py --parallel
+
+# See all options for any script
+python reusable_template.py --help
+```
+
+📚 **See [examples/README.md](examples/README.md) for complete documentation on all 7 production scripts**
 
 ---
 
