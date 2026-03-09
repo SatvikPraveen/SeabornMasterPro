@@ -15,7 +15,11 @@ NOTEBOOK_FOLDERS = {
     "📦 03 - Categorical & Matrix Plots": "exports/03_categorical",
     "📐 04 - Dashboards & Facets": "exports/04_dashboards",
     "🧪 05 - Real-World EDA": "exports/05_eda",
-    "📈 06 - Time Series Plots": "exports/06_timeseries"
+    "📈 06 - Time Series & Advanced Lineplots": "exports/06_timeseries",
+    "🎯 07 - Figure-Level Functions": "exports/07_figure_level",
+    "📊 08 - Advanced Categorical Plots": "exports/08_categorical",
+    "🎨 09 - Styling & Customization": "exports/09_styling",
+    "📐 10 - Statistical Parameters": "exports/10_statistical"
 }
 
 # 📂 Sidebar Navigation

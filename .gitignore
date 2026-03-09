@@ -5,6 +5,7 @@ __pycache__/
 *.pyd
 
 # 🧪 Virtual Environments
+venv/
 sns_env/
 .venv/
 env/
