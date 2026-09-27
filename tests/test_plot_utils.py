@@ -15,7 +15,13 @@ from utils.plot_utils import (
 
 
 def test_facade_exports_everything():
-    assert set(utils.__all__) >= {"apply_theme", "save_fig", "stylize_plot", "compare_groups", "annotate_pairwise"}
+    assert set(utils.__all__) >= {
+        "apply_theme",
+        "save_fig",
+        "stylize_plot",
+        "compare_groups",
+        "annotate_pairwise",
+    }
     assert utils.__version__ == "2.0.0"
 
 
@@ -32,5 +38,5 @@ def test_legacy_workflow(tmp_path, sample_data):
 
 
 def test_legacy_grid_signature():
-    fig, axes = create_plot_grid(2, 2)
+    _fig, axes = create_plot_grid(2, 2)
     assert len(axes) == 4

@@ -76,7 +76,9 @@ class TestEffectSizes:
         with pytest.raises(ValueError):
             S.cohens_d([1], [1, 2])
 
-    @pytest.mark.parametrize("v,label", [(0.1, "negligible"), (0.3, "small"), (0.6, "medium"), (1.2, "large")])
+    @pytest.mark.parametrize(
+        "v,label", [(0.1, "negligible"), (0.3, "small"), (0.6, "medium"), (1.2, "large")]
+    )
     def test_interpret_d(self, v, label):
         assert S.interpret_effect_size(v) == label
         assert S.interpret_effect_size(-v) == label
@@ -160,7 +162,10 @@ class TestCompareGroups:
 
     def test_effect_kind_by_test(self, three_groups):
         assert (S.compare_groups(three_groups, "g", "y")["effect_kind"] == "hedges_g").all()
-        assert (S.compare_groups(three_groups, "g", "y", test="mannwhitney")["effect_kind"] == "cliffs_delta").all()
+        assert (
+            S.compare_groups(three_groups, "g", "y", test="mannwhitney")["effect_kind"]
+            == "cliffs_delta"
+        ).all()
 
     def test_pairs_and_order(self, three_groups):
         df = S.compare_groups(three_groups, "g", "y", pairs=[("C", "A")], order=["C", "B", "A"])

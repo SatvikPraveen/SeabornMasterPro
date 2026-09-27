@@ -1,11 +1,10 @@
 import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pytest
 
 matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-import pandas as pd  # noqa: E402
-import pytest  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
@@ -35,6 +34,8 @@ def three_groups(rng):
     return pd.DataFrame(
         {
             "g": np.repeat(["A", "B", "C"], 50),
-            "y": np.concatenate([rng.normal(0, 1, 50), rng.normal(0.6, 1, 50), rng.normal(1.5, 1, 50)]),
+            "y": np.concatenate(
+                [rng.normal(0, 1, 50), rng.normal(0.6, 1, 50), rng.normal(1.5, 1, 50)]
+            ),
         }
     )

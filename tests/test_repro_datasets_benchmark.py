@@ -25,7 +25,9 @@ class TestRepro:
     def test_manifest_roundtrip(self, tmp_path):
         f = tmp_path / "a.txt"
         f.write_text("hello")
-        man = repro.write_manifest([f], tmp_path / "MANIFEST.json", relative_to=tmp_path, extra={"seed": 1})
+        man = repro.write_manifest(
+            [f], tmp_path / "MANIFEST.json", relative_to=tmp_path, extra={"seed": 1}
+        )
         assert man["files"]["a.txt"]["bytes"] == 5
         assert man["seed"] == 1
         assert repro.verify_manifest(tmp_path / "MANIFEST.json") == {"a.txt": True}
@@ -35,7 +37,10 @@ class TestRepro:
     def test_sha256_known(self, tmp_path):
         f = tmp_path / "e"
         f.write_bytes(b"")
-        assert repro.file_sha256(f) == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        assert (
+            repro.file_sha256(f)
+            == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        )
 
 
 class TestDatasets:
@@ -53,7 +58,7 @@ class TestDatasets:
 
     def test_row_counts_match_cards(self, tmp_path):
         datasets.generate_all(tmp_path, manifest=False, verbose=False)
-        for name, card in datasets.REGISTRY.items():
+        for _name, card in datasets.REGISTRY.items():
             assert len(pd.read_csv(tmp_path / card.filename)) == card.n_rows
 
     def test_load_parses_dates(self, tmp_path):
@@ -68,7 +73,9 @@ class TestDatasets:
 
         datasets.generate_all(tmp_path, manifest=False, verbose=False)
         df = datasets.load("clinical_trial", tmp_path)
-        d = cohens_d(df.loc[df.Arm == "High Dose", "Outcome"], df.loc[df.Arm == "Placebo", "Outcome"])
+        d = cohens_d(
+            df.loc[df.Arm == "High Dose", "Outcome"], df.loc[df.Arm == "Placebo", "Outcome"]
+        )
         assert 0.4 < d < 1.2
 
     def test_repo_csvs_match_manifest(self):

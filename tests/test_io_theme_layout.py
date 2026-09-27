@@ -25,14 +25,14 @@ class TestSaveFig:
         assert "python" in prov and "packages" in prov and "seaborn" in prov["packages"]
 
     def test_sidecar(self, tmp_path):
-        fig, ax = plt.subplots()
+        fig, _ax = plt.subplots()
         io.save_fig(tmp_path / "p.png", fig=fig, sidecar=True, verbose=False)
         side = tmp_path / "p.png.json"
         assert side.exists()
         assert "timestamp_utc" in json.loads(side.read_text())
 
     def test_no_provenance(self, tmp_path):
-        fig, ax = plt.subplots()
+        fig, _ax = plt.subplots()
         io.save_fig(tmp_path / "p.png", fig=fig, provenance=False, verbose=False)
         with Image.open(tmp_path / "p.png") as im:
             assert "Provenance" not in im.info
@@ -53,7 +53,9 @@ class TestSaveFig:
     def test_publication_multi_format(self, tmp_path):
         fig, ax = plt.subplots()
         ax.plot([1, 2])
-        paths = io.save_publication_figure(fig, tmp_path / "pub", formats=("png", "pdf", "svg"), dpi=72, verbose=False)
+        paths = io.save_publication_figure(
+            fig, tmp_path / "pub", formats=("png", "pdf", "svg"), dpi=72, verbose=False
+        )
         assert [p.suffix for p in paths] == [".png", ".pdf", ".svg"]
         assert all(p.exists() for p in paths)
 
@@ -70,7 +72,9 @@ class TestExportData:
 
     def test_format_override_and_none(self, tmp_path):
         assert io.export_plot_data(None, None, tmp_path / "x.csv") is None
-        p = io.export_plot_data(None, {"A": [1]}, tmp_path / "data.txt", format="csv", verbose=False)
+        p = io.export_plot_data(
+            None, {"A": [1]}, tmp_path / "data.txt", format="csv", verbose=False
+        )
         assert p.read_text().startswith("A")
 
     def test_bad_format(self, tmp_path):
@@ -109,9 +113,9 @@ class TestTheme:
 
 class TestLayout:
     def test_plot_grid_flat(self):
-        fig, axes = layout.create_plot_grid(2, 3)
+        _fig, axes = layout.create_plot_grid(2, 3)
         assert axes.shape == (6,)
-        fig1, axes1 = layout.create_plot_grid(1, 1)
+        _fig1, axes1 = layout.create_plot_grid(1, 1)
         assert axes1.shape == (1,)
 
     def test_plot_grid_invalid(self):
@@ -119,7 +123,9 @@ class TestLayout:
             layout.create_plot_grid(0, 2)
 
     def test_plot_comparison(self, sample_data):
-        fig, axes = layout.plot_comparison(sns.histplot, sample_data, [{"x": "x"}, {"x": "y", "kde": True}], ["x", "y"])
+        _fig, axes = layout.plot_comparison(
+            sns.histplot, sample_data, [{"x": "x"}, {"x": "y", "kde": True}], ["x", "y"]
+        )
         assert len(axes) == 2 and axes[1].get_title() == "y"
 
     def test_plot_comparison_mismatch(self, sample_data):
@@ -127,27 +133,27 @@ class TestLayout:
             layout.plot_comparison(sns.histplot, sample_data, [{"x": "x"}], ["a", "b"])
 
     def test_label_panels(self):
-        fig, axes = layout.create_plot_grid(1, 3)
+        _fig, axes = layout.create_plot_grid(1, 3)
         layout.label_panels(axes, fmt="({})", uppercase=False)
         assert [t.get_text() for ax in axes for t in ax.texts] == ["(a)", "(b)", "(c)"]
 
     @pytest.mark.parametrize("loc", ["year", "month", "week", "day", "auto"])
     def test_format_date_axis(self, loc):
         dates = pd.date_range("2024-01-01", periods=90)
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         ax.plot(dates, np.arange(90))
         out = layout.format_date_axis(ax, major_locator=loc)
         assert out is ax
 
     def test_format_date_axis_bad(self):
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         with pytest.raises(ValueError):
             layout.format_date_axis(ax, major_locator="fortnight")
 
 
 class TestAnnotate:
     def test_stylize_and_reference(self):
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         ax.plot([1, 2, 3])
         annotate.stylize_plot("T", "X", "Y", rotate_xticks=45, ax=ax)
         assert ax.get_title() == "T" and ax.get_xlabel() == "X"
@@ -158,17 +164,17 @@ class TestAnnotate:
             annotate.add_reference_line(1, "diag", ax=ax)
 
     def test_annotate_points(self):
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         annotate.annotate_points([0, 1], [0, 1], labels=["a", "b"], ax=ax)
         assert [t.get_text() for t in ax.texts] == ["a", "b"]
 
     def test_single_bracket(self):
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         annotate.add_statistical_annotations(ax, 0, 1, 1.0, 0.003)
         assert ax.texts[0].get_text() == "**"
 
     def test_annotate_pairwise_stacks_and_expands_ylim(self, three_groups):
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         sns.boxplot(data=three_groups, x="g", y="y", ax=ax)
         top_before = ax.get_ylim()[1]
         res = stats.compare_groups(three_groups, "g", "y")
@@ -179,7 +185,7 @@ class TestAnnotate:
 
     def test_annotate_pairwise_only_significant(self, rng):
         df = pd.DataFrame({"g": np.repeat(["A", "B"], 30), "y": rng.normal(size=60)})
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         sns.barplot(data=df, x="g", y="y", ax=ax)
         res = stats.compare_groups(df, "g", "y")
         res["p_adjusted"] = 0.9
@@ -188,7 +194,7 @@ class TestAnnotate:
         assert len(ax.texts) == 0
 
     def test_annotate_effect_sizes(self, three_groups):
-        fig, ax = plt.subplots()
+        _fig, ax = plt.subplots()
         sns.barplot(data=three_groups, x="g", y="y", ax=ax)
         summary = stats.group_summary(three_groups, "g", "y", n_boot=100)
         annotate.annotate_effect_sizes(ax, summary, "g")

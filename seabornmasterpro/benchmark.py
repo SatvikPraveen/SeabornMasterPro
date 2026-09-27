@@ -14,9 +14,6 @@ from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 from typing import Any
 
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -144,6 +141,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument("--out", type=Path, default=Path("benchmarks/results"))
     parser.add_argument("--only", nargs="*", default=None, help="subset of case names")
     args = parser.parse_args(list(argv) if argv is not None else None)
+    plt.switch_backend("Agg")  # the CLI never needs a display
     cases = {k: v for k, v in DEFAULT_CASES.items() if not args.only or k in args.only}
     results = run_benchmark(args.sizes, cases, repeats=args.repeats)
     out: Path = args.out

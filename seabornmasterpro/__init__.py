@@ -53,39 +53,39 @@ __version__ = "2.0.0"
 
 __all__ = [
     "__version__",
+    "add_reference_line",
+    "add_statistical_annotations",
+    "annotate_pairwise",
+    "annotate_points",
     # theme
     "apply_theme",
+    # stats
+    "bootstrap_ci",
+    "capture_environment",
+    "cliffs_delta",
+    "cohens_d",
+    "compare_groups",
+    "contrast_ratio",
+    # color
+    "create_color_palette",
+    "create_plot_grid",
+    "export_plot_data",
+    "figure_provenance",
+    "format_date_axis",
+    "hedges_g",
     "journal_context",
+    "p_to_stars",
+    "permutation_test",
+    # layout
+    "plot_comparison",
     "publication_rc",
     # io
     "save_fig",
     "save_publication_figure",
-    "export_plot_data",
-    "figure_provenance",
-    # annotate
-    "stylize_plot",
-    "add_reference_line",
-    "annotate_points",
-    "add_statistical_annotations",
-    "annotate_pairwise",
-    # color
-    "create_color_palette",
-    "simulate_cvd",
-    "contrast_ratio",
-    "validate_palette",
-    # layout
-    "plot_comparison",
-    "create_plot_grid",
-    "format_date_axis",
-    # stats
-    "bootstrap_ci",
-    "cohens_d",
-    "hedges_g",
-    "cliffs_delta",
-    "compare_groups",
-    "permutation_test",
-    "p_to_stars",
     # repro
     "set_seed",
-    "capture_environment",
+    "simulate_cvd",
+    # annotate
+    "stylize_plot",
+    "validate_palette",
 ]

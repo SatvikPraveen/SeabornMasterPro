@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from seabornmasterpro.datasets import main  # noqa: E402
+from seabornmasterpro.datasets import main
 
 if __name__ == "__main__":
     raise SystemExit(main())

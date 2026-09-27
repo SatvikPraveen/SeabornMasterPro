@@ -86,7 +86,14 @@ class TestValidate:
 
     def test_to_dict_roundtrip_keys(self):
         d = C.validate_palette("deep").to_dict()
-        assert {"n_colors", "min_delta_e", "closest_pair", "min_delta_e_cvd", "passes", "warnings"} <= set(d)
+        assert {
+            "n_colors",
+            "min_delta_e",
+            "closest_pair",
+            "min_delta_e_cvd",
+            "passes",
+            "warnings",
+        } <= set(d)
 
     def test_min_pairwise_single(self):
         d, pair = C.min_pairwise_distance(["red"])
