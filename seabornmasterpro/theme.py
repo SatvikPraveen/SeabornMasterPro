@@ -14,7 +14,7 @@ References
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any
@@ -111,7 +111,13 @@ def apply_theme(
     sns.set_theme(style=style, context=context, palette=palette, font_scale=font_scale, rc=rc)
 
 
-def publication_rc(journal: str = "nature", *, columns: int = 1, dpi: int = 300) -> dict[str, Any]:
+def publication_rc(
+    journal: str = "nature",
+    *,
+    columns: int = 1,
+    dpi: int = 300,
+    font_family: Sequence[str] | None = None,
+) -> dict[str, Any]:
     """Build an rcParams dictionary tuned for a venue.
 
     Parameters
@@ -122,6 +128,11 @@ def publication_rc(journal: str = "nature", *, columns: int = 1, dpi: int = 300)
         ``1`` for single column, ``2`` for full width.
     dpi
         Raster export resolution.
+    font_family
+        Override the preset's font list. Presets name the venue's preferred fonts
+        (for IEEE, Times New Roman); when a font is not installed matplotlib falls
+        back to the last entry (DejaVu Sans / DejaVu Serif) and logs a warning, so
+        pass an installed family here to silence it.
 
     Returns
     -------
@@ -132,15 +143,21 @@ def publication_rc(journal: str = "nature", *, columns: int = 1, dpi: int = 300)
     width = spec.double_column if columns == 2 else spec.single_column
     height = min(width / 1.618, spec.max_height)  # golden ratio by default
     fs = spec.font_size
+    family = tuple(font_family) if font_family else spec.font_family
     return {
         "figure.figsize": (width, height),
         "figure.dpi": 100,
         "savefig.dpi": dpi,
         "savefig.bbox": "tight",
         "savefig.pad_inches": 0.02,
-        "font.family": "sans-serif" if "Serif" not in spec.font_family[-1] else "serif",
-        "font.sans-serif": list(spec.font_family),
-        "font.serif": list(spec.font_family),
+        "font.family": "serif"
+        if any(
+            ("serif" in f.lower() and "sans" not in f.lower()) or "times" in f.lower()
+            for f in family
+        )
+        else "sans-serif",
+        "font.sans-serif": list(family),
+        "font.serif": list(family),
         "font.size": fs,
         "axes.titlesize": fs,
         "axes.labelsize": fs,
@@ -166,9 +183,21 @@ def publication_rc(journal: str = "nature", *, columns: int = 1, dpi: int = 300)
 
 @contextmanager
 def journal_context(
-    journal: str = "nature", *, columns: int = 1, dpi: int = 300, style: str = "ticks"
+    journal: str = "nature",
+    *,
+    columns: int = 1,
+    dpi: int = 300,
+    style: str = "ticks",
+    font_family: Sequence[str] | None = None,
 ) -> Iterator[JournalSpec]:
     """Temporarily configure matplotlib for a venue.
+
+    Parameters
+    ----------
+    journal, columns, dpi, font_family
+        As for :func:`publication_rc`.
+    style
+        Seaborn axes style applied inside the context.
 
     Examples
     --------
@@ -177,7 +206,7 @@ def journal_context(
     ...     ...
     """
     spec = _spec(journal)
-    rc = publication_rc(journal, columns=columns, dpi=dpi)
+    rc = publication_rc(journal, columns=columns, dpi=dpi, font_family=font_family)
     with mpl.rc_context(rc):  # type: ignore[arg-type]
         with sns.axes_style(style):
             yield spec

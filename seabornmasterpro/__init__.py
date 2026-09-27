@@ -37,6 +37,7 @@ from seabornmasterpro.io import (
     figure_provenance,
     save_fig,
     save_publication_figure,
+    write_json,
 )
 from seabornmasterpro.layout import (
     create_plot_grid,
@@ -102,5 +103,6 @@ __all__ = [
     "stylize_plot",
     "validate_palette",
     "verify_manifest",
+    "write_json",
     "write_manifest",
 ]

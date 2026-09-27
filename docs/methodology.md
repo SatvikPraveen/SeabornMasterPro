@@ -115,10 +115,13 @@ imperceptible and ΔE > 10 is clearly distinct.
 contrast ratio (*L*₁ + 0.05)/(*L*₂ + 0.05). Success Criterion 1.4.11 requires ≥ 3:1 for
 graphical objects; 1.4.3 requires ≥ 4.5:1 for normal text.
 
-**`validate_palette`** reports the minimum pairwise ΔE in normal vision and under each
-deficiency, the minimum contrast against the chosen background, and passes only when all
-thresholds are met. Seaborn's `colorblind` palette passes the ΔE checks but its yellow
-fails 3:1 on white, which the report says explicitly.
+**`validate_palette`** reports two separate verdicts: `distinguishable` (minimum pairwise ΔE
+in normal vision and under each deficiency clears `threshold`) and `contrast_ok` (every colour
+reaches `min_contrast` against the background). `passes` requires both unless
+`check_contrast=False`, in which case contrast is still measured and reported but does not
+fail the palette. Seaborn's `colorblind` palette is distinguishable but its yellow fails 3:1
+on white, which the report says explicitly; a dark marker edge or a non-white background is
+the usual remedy.
 
 **Validation.** Tests assert that pure red and green collapse under protanopia and
 deuteranopia, that grey is invariant under every simulation, that black/white contrast is

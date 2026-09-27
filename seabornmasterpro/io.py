@@ -15,7 +15,13 @@ from matplotlib.figure import Figure
 from seabornmasterpro._typing import PathType
 from seabornmasterpro.repro import capture_environment
 
-__all__ = ["export_plot_data", "figure_provenance", "save_fig", "save_publication_figure"]
+__all__ = [
+    "export_plot_data",
+    "figure_provenance",
+    "save_fig",
+    "save_publication_figure",
+    "write_json",
+]
 
 log = logging.getLogger(__name__)
 
@@ -204,3 +210,38 @@ def export_plot_data(
     if verbose:
         print(f"✅ Data exported to {path}")
     return path
+
+
+def write_json(
+    data: Any, filename: PathType, *, provenance: bool = False, verbose: bool = True
+) -> Path:
+    """Write any JSON-serialisable object (nested dicts, lists, NumPy scalars) next to a figure.
+
+    Parameters
+    ----------
+    data
+        Object to serialise. NumPy scalars/arrays, pandas objects and datetimes are converted.
+    filename
+        Destination ``.json`` path; parent folders are created.
+    provenance
+        Wrap the payload as ``{"data": ..., "provenance": capture_environment()}``.
+    """
+    path = Path(filename)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"data": data, "provenance": capture_environment()} if provenance else data
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2, sort_keys=True, default=_json_default)
+        fh.write("\n")
+    if verbose:
+        print(f"✅ JSON written to {path}")
+    return path
+
+
+def _json_default(obj: Any) -> Any:
+    if hasattr(obj, "tolist"):
+        return obj.tolist()
+    if hasattr(obj, "to_dict"):
+        return obj.to_dict()
+    if hasattr(obj, "isoformat"):
+        return obj.isoformat()
+    return str(obj)

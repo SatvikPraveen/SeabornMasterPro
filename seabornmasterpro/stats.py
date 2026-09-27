@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import itertools
 from collections.abc import Callable, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 import numpy as np
@@ -57,10 +57,22 @@ class BootstrapResult:
     confidence: float
     n_boot: int
     method: str
+    samples: np.ndarray | None = field(default=None, repr=False, compare=False)
 
     def as_tuple(self) -> tuple[float, float]:
         """Return ``(low, high)``."""
         return self.low, self.high
+
+    def to_dict(self) -> dict[str, float | int | str]:
+        """Scalar fields only (drops ``samples``), e.g. for building a DataFrame row."""
+        return {
+            "estimate": self.estimate,
+            "low": self.low,
+            "high": self.high,
+            "confidence": self.confidence,
+            "n_boot": self.n_boot,
+            "method": self.method,
+        }
 
 
 def _rng(seed: int | np.random.Generator | None) -> np.random.Generator:
@@ -75,6 +87,7 @@ def bootstrap_ci(
     n_boot: int = 2000,
     method: Literal["percentile", "basic", "bca"] = "percentile",
     seed: int | np.random.Generator | None = 0,
+    return_samples: bool = False,
 ) -> BootstrapResult:
     """Non-parametric bootstrap confidence interval for a univariate statistic.
 
@@ -93,6 +106,9 @@ def bootstrap_ci(
         ``bca`` (bias-corrected and accelerated, via :func:`scipy.stats.bootstrap`).
     seed
         Integer seed or generator for reproducibility.
+    return_samples
+        Keep the bootstrap replicates in ``result.samples`` (percentile and basic
+        methods only) so the sampling distribution can be plotted.
     """
     x = np.asarray(pd.Series(np.asarray(data, dtype=float)).dropna(), dtype=float)
     if x.size < 2:
@@ -127,7 +143,15 @@ def bootstrap_ci(
         lo, hi = 2 * est - hi, 2 * est - lo
     elif method != "percentile":
         raise ValueError("method must be 'percentile', 'basic' or 'bca'")
-    return BootstrapResult(est, float(lo), float(hi), confidence, n_boot, method)
+    return BootstrapResult(
+        est,
+        float(lo),
+        float(hi),
+        confidence,
+        n_boot,
+        method,
+        samples=boots if return_samples else None,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -424,5 +448,5 @@ def group_summary(
     for lvl, sub in data.groupby(x, observed=True, sort=False):
         vals = sub[y].dropna().to_numpy(dtype=float)
         res = bootstrap_ci(vals, statistic, confidence=confidence, n_boot=n_boot, seed=seed)
-        rows.append({x: lvl, "n": vals.size, **asdict(res)})
+        rows.append({x: lvl, "n": vals.size, **res.to_dict()})
     return pd.DataFrame(rows)

@@ -6,10 +6,7 @@ The most common helpers are re-exported at the top level:
 
 ```python
 import seabornmasterpro as smp
-
-smp.apply_theme()
-smp.set_seed(0)
-smp.compare_groups(df, "group", "value")
+smp.apply_theme(); smp.set_seed(0); smp.compare_groups(df, 'group', 'value')
 ```
 
 ## Modules
@@ -99,9 +96,16 @@ rc
 
 Return ``(width, height)`` in inches for a venue and aspect ratio (width / height).
 
-### `journal_context(journal: 'str' = 'nature', *, columns: 'int' = 1, dpi: 'int' = 300, style: 'str' = 'ticks') -> 'Iterator[JournalSpec]'`
+### `journal_context(journal: 'str' = 'nature', *, columns: 'int' = 1, dpi: 'int' = 300, style: 'str' = 'ticks', font_family: 'Sequence[str] | None' = None) -> 'Iterator[JournalSpec]'`
 
 Temporarily configure matplotlib for a venue.
+
+Parameters
+----------
+journal, columns, dpi, font_family
+    As for :func:`publication_rc`.
+style
+    Seaborn axes style applied inside the context.
 
 Examples
 --------
@@ -109,7 +113,7 @@ Examples
 ...     fig, ax = plt.subplots()
 ...     ...
 
-### `publication_rc(journal: 'str' = 'nature', *, columns: 'int' = 1, dpi: 'int' = 300) -> 'dict[str, Any]'`
+### `publication_rc(journal: 'str' = 'nature', *, columns: 'int' = 1, dpi: 'int' = 300, font_family: 'Sequence[str] | None' = None) -> 'dict[str, Any]'`
 
 Build an rcParams dictionary tuned for a venue.
 
@@ -121,6 +125,11 @@ columns
     ``1`` for single column, ``2`` for full width.
 dpi
     Raster export resolution.
+font_family
+    Override the preset's font list. Presets name the venue's preferred fonts
+    (for IEEE, Times New Roman); when a font is not installed matplotlib falls
+    back to the last entry (DejaVu Sans / DejaVu Serif) and logs a warning, so
+    pass an installed family here to silence it.
 
 Returns
 -------
@@ -201,6 +210,19 @@ sidecar
 title
     Optional title stored in the file metadata.
 
+### `write_json(data: 'Any', filename: 'PathType', *, provenance: 'bool' = False, verbose: 'bool' = True) -> 'Path'`
+
+Write any JSON-serialisable object (nested dicts, lists, NumPy scalars) next to a figure.
+
+Parameters
+----------
+data
+    Object to serialise. NumPy scalars/arrays, pandas objects and datetimes are converted.
+filename
+    Destination ``.json`` path; parent folders are created.
+provenance
+    Wrap the payload as ``{"data": ..., "provenance": capture_environment()}``.
+
 ## `seabornmasterpro.stats`
 
 Statistical inference helpers for visualization.
@@ -229,8 +251,10 @@ Point estimate and confidence interval from a bootstrap.
 | `confidence` | `float` |
 | `n_boot` | `int` |
 | `method` | `str` |
+| `samples` | `np.ndarray | None` |
 
 - **`as_tuple(self) -> 'tuple[float, float]'`** (method) — Return ``(low, high)``.
+- **`to_dict(self) -> 'dict[str, float | int | str]'`** (method) — Scalar fields only (drops ``samples``), e.g. for building a DataFrame row.
 
 ### `PairwiseResult`
 
@@ -267,7 +291,7 @@ method
     ``none``, ``bonferroni``, ``holm`` (step-down, controls FWER) or ``fdr_bh``
     (Benjamini-Hochberg, controls FDR).
 
-### `bootstrap_ci(data: 'Sequence[float] | np.ndarray | pd.Series', statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x11088c470>, *, confidence: 'float' = 0.95, n_boot: 'int' = 2000, method: "Literal['percentile', 'basic', 'bca']" = 'percentile', seed: 'int | np.random.Generator | None' = 0) -> 'BootstrapResult'`
+### `bootstrap_ci(data: 'Sequence[float] | np.ndarray | pd.Series', statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x101b68830>, *, confidence: 'float' = 0.95, n_boot: 'int' = 2000, method: "Literal['percentile', 'basic', 'bca']" = 'percentile', seed: 'int | np.random.Generator | None' = 0, return_samples: 'bool' = False) -> 'BootstrapResult'`
 
 Non-parametric bootstrap confidence interval for a univariate statistic.
 
@@ -286,6 +310,9 @@ method
     ``bca`` (bias-corrected and accelerated, via :func:`scipy.stats.bootstrap`).
 seed
     Integer seed or generator for reproducibility.
+return_samples
+    Keep the bootstrap replicates in ``result.samples`` (percentile and basic
+    methods only) so the sampling distribution can be plotted.
 
 ### `cliffs_delta(a: 'Any', b: 'Any') -> 'float'`
 
@@ -328,7 +355,7 @@ pandas.DataFrame
 
 Glass's Δ: mean difference standardised by the *control* group's SD.
 
-### `group_summary(data: 'pd.DataFrame', x: 'str', y: 'str', *, statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x11088c470>, confidence: 'float' = 0.95, n_boot: 'int' = 2000, seed: 'int | np.random.Generator | None' = 0) -> 'pd.DataFrame'`
+### `group_summary(data: 'pd.DataFrame', x: 'str', y: 'str', *, statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x101b68830>, confidence: 'float' = 0.95, n_boot: 'int' = 2000, seed: 'int | np.random.Generator | None' = 0) -> 'pd.DataFrame'`
 
 Per-group estimate with bootstrap CI, ready to plot as error bars.
 
@@ -366,9 +393,27 @@ Draw a horizontal (``'h'``) or vertical (``'v'``) reference line.
 
 Draw a single significance bracket between two x positions.
 
-### `annotate_effect_sizes(ax: 'Axes', summary: 'pd.DataFrame', x: 'str', *, fmt: 'str' = '{estimate:.2f}\n[{low:.2f}, {high:.2f}]', fontsize: 'float' = 8, y_frac: 'float' = 0.02) -> 'Axes'`
+### `annotate_effect_sizes(ax: 'Axes', summary: 'pd.DataFrame', x: 'str', *, fmt: 'str' = '{estimate:.2f}\n[{low:.2f}, {high:.2f}]', fontsize: 'float' = 8, y_frac: 'float' = 0.02, pad: 'float' = 0.14) -> 'Axes'`
 
 Print estimate and CI beneath each category using :func:`seabornmasterpro.stats.group_summary` output.
+
+Parameters
+----------
+ax
+    Axes with the categories on the x axis.
+summary
+    Output of :func:`seabornmasterpro.stats.group_summary`.
+x
+    Name of the category column in ``summary``.
+fmt
+    Format string applied to each summary row.
+fontsize
+    Label font size.
+y_frac
+    Gap between the bottom of the axes and the label, as a fraction of the y range.
+pad
+    Extra y range reserved *below* the data for the labels, as a fraction of the
+    current range. Set to ``0`` to keep the limits unchanged.
 
 ### `annotate_pairwise(ax: 'Axes', results: 'pd.DataFrame', *, order: 'Sequence[str] | None' = None, p_column: 'str' = 'p_adjusted', only_significant: 'bool' = False, alpha: 'float' = 0.05, show_effect: 'bool' = False, fontsize: 'float' = 10, line_offset: 'float' = 0.05, line_height: 'float' = 0.02, text_gap: 'float' = 0.005) -> 'Axes'`
 
@@ -429,9 +474,10 @@ Accessibility summary for a categorical palette.
 | `threshold` | `float` |
 | `distinguishable` | `bool` |
 | `contrast_ok` | `bool` |
+| `contrast_required` | `bool` |
 | `warnings` | `list[str]` |
 
-- **`passes`** (property) — True when colours stay distinguishable (normal + CVD) and clear the contrast floor.
+- **`passes`** (property) — True when colours stay distinguishable (normal + CVD) and, if required, clear the contrast floor.
 - **`to_dict(self) -> 'dict[str, Any]'`** (method) — Plain-dict representation.
 
 ### `contrast_ratio(color_a: 'ColorType', color_b: 'ColorType') -> 'float'`
@@ -494,7 +540,7 @@ Inverse sRGB companding.
 
 Convert colour specs (or a named Seaborn palette) to an ``(n, 3)`` float array in sRGB.
 
-### `validate_palette(colors: 'Sequence[ColorType] | str', *, threshold: 'float' = 10.0, background: 'ColorType' = 'white', min_contrast: 'float' = 3.0) -> 'PaletteReport'`
+### `validate_palette(colors: 'Sequence[ColorType] | str', *, threshold: 'float' = 10.0, background: 'ColorType' = 'white', min_contrast: 'float' = 3.0, check_contrast: 'bool' = True) -> 'PaletteReport'`
 
 Check that palette entries stay distinguishable under CVD and against the background.
 
@@ -509,6 +555,17 @@ background
     Background colour for the contrast check.
 min_contrast
     Minimum WCAG contrast for graphical objects (3:1 per SC 1.4.11).
+check_contrast
+    When ``False`` the contrast against ``background`` is still measured and
+    reported but does not affect ``passes`` or the warnings. Most standard
+    palettes contain a yellow that fails 3:1 on white; if the marks carry a
+    dark edge or the background is not white, set this to ``False``.
+
+Notes
+-----
+``report.distinguishable`` answers "can the categories be told apart?" and
+``report.contrast_ok`` answers "do they stand out from the background?";
+``report.passes`` combines them according to ``check_contrast``.
 
 ## `seabornmasterpro.layout`
 

@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   three research datasets with known ground truth were added (`clinical_trial`,
   `sensor_readings`, `gene_expression`). `smp-datasets` CLI and `datasets/MANIFEST.json`.
 - **`benchmark`**: timing harness for Seaborn functions across sample sizes; `smp-benchmark` CLI.
+- `validate_palette(check_contrast=False)` separates distinguishability from background contrast;
+  `bootstrap_ci(return_samples=True)` keeps the replicates; `annotate_effect_sizes` reserves space
+  for its labels; `publication_rc`/`journal_context` accept a `font_family` override; `io.write_json`
+  writes nested metadata (optionally with provenance).
 
 #### Curriculum and docs
 - **`notebooks/11_research_workflow.ipynb`**: data cards → bootstrap CIs → Holm-corrected pairwise

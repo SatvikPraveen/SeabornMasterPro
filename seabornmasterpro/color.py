@@ -209,12 +209,13 @@ class PaletteReport:
     threshold: float = 10.0
     distinguishable: bool = False
     contrast_ok: bool = False
+    contrast_required: bool = True
     warnings: list[str] = field(default_factory=list)
 
     @property
     def passes(self) -> bool:
-        """True when colours stay distinguishable (normal + CVD) and clear the contrast floor."""
-        return self.distinguishable and self.contrast_ok
+        """True when colours stay distinguishable (normal + CVD) and, if required, clear the contrast floor."""
+        return self.distinguishable and (self.contrast_ok or not self.contrast_required)
 
     def to_dict(self) -> dict[str, Any]:
         """Plain-dict representation."""
@@ -228,6 +229,7 @@ class PaletteReport:
             "threshold": self.threshold,
             "distinguishable": self.distinguishable,
             "contrast_ok": self.contrast_ok,
+            "contrast_required": self.contrast_required,
             "passes": self.passes,
             "warnings": list(self.warnings),
         }
@@ -239,6 +241,7 @@ def validate_palette(
     threshold: float = 10.0,
     background: ColorType = "white",
     min_contrast: float = 3.0,
+    check_contrast: bool = True,
 ) -> PaletteReport:
     """Check that palette entries stay distinguishable under CVD and against the background.
 
@@ -253,10 +256,27 @@ def validate_palette(
         Background colour for the contrast check.
     min_contrast
         Minimum WCAG contrast for graphical objects (3:1 per SC 1.4.11).
+    check_contrast
+        When ``False`` the contrast against ``background`` is still measured and
+        reported but does not affect ``passes`` or the warnings. Most standard
+        palettes contain a yellow that fails 3:1 on white; if the marks carry a
+        dark edge or the background is not white, set this to ``False``.
+
+    Notes
+    -----
+    ``report.distinguishable`` answers "can the categories be told apart?" and
+    ``report.contrast_ok`` answers "do they stand out from the background?";
+    ``report.passes`` combines them according to ``check_contrast``.
     """
     rgb = to_rgb_array(colors)
     d, pair = min_pairwise_distance(rgb)
-    report = PaletteReport(n_colors=len(rgb), min_delta_e=d, closest_pair=pair, threshold=threshold)
+    report = PaletteReport(
+        n_colors=len(rgb),
+        min_delta_e=d,
+        closest_pair=pair,
+        threshold=threshold,
+        contrast_required=check_contrast,
+    )
     if d < threshold:
         report.warnings.append(
             f"colours {pair[0]} and {pair[1]} differ by only ΔE={d:.1f} in normal vision"
@@ -275,7 +295,7 @@ def validate_palette(
         v >= threshold for v in report.min_delta_e_cvd.values()
     )
     report.contrast_ok = min(contrasts) >= min_contrast
-    if not report.contrast_ok:
+    if check_contrast and not report.contrast_ok:
         report.warnings.append(
             f"minimum contrast against background is {min(contrasts):.2f}:1 (< {min_contrast}:1)"
         )

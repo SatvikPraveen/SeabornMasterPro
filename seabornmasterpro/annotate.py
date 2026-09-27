@@ -182,10 +182,33 @@ def annotate_effect_sizes(
     fmt: str = "{estimate:.2f}\n[{low:.2f}, {high:.2f}]",
     fontsize: float = 8,
     y_frac: float = 0.02,
+    pad: float = 0.14,
 ) -> Axes:
-    """Print estimate and CI beneath each category using :func:`seabornmasterpro.stats.group_summary` output."""
+    """Print estimate and CI beneath each category using :func:`seabornmasterpro.stats.group_summary` output.
+
+    Parameters
+    ----------
+    ax
+        Axes with the categories on the x axis.
+    summary
+        Output of :func:`seabornmasterpro.stats.group_summary`.
+    x
+        Name of the category column in ``summary``.
+    fmt
+        Format string applied to each summary row.
+    fontsize
+        Label font size.
+    y_frac
+        Gap between the bottom of the axes and the label, as a fraction of the y range.
+    pad
+        Extra y range reserved *below* the data for the labels, as a fraction of the
+        current range. Set to ``0`` to keep the limits unchanged.
+    """
     order = [t.get_text() for t in ax.get_xticklabels()]
     y0, y1 = ax.get_ylim()
+    if pad:
+        y0 = y0 - pad * (y1 - y0)
+        ax.set_ylim(y0, y1)
     for i, name in enumerate(order):
         row = summary.loc[summary[x].astype(str) == str(name)]
         if row.empty:

@@ -199,3 +199,41 @@ class TestAnnotate:
         summary = stats.group_summary(three_groups, "g", "y", n_boot=100)
         annotate.annotate_effect_sizes(ax, summary, "g")
         assert len(ax.texts) == 3
+
+
+class TestPolish:
+    def test_font_family_override(self):
+        rc = theme.publication_rc("ieee", font_family=("DejaVu Serif",))
+        assert rc["font.serif"] == ["DejaVu Serif"] and rc["font.family"] == "serif"
+        rc = theme.publication_rc("nature", font_family=("DejaVu Sans",))
+        assert rc["font.family"] == "sans-serif"
+        with theme.journal_context("ieee", font_family=("DejaVu Serif",)):
+            import matplotlib as mpl
+
+            assert mpl.rcParams["font.serif"] == ["DejaVu Serif"]
+
+    def test_annotate_effect_sizes_reserves_space(self, three_groups):
+        from seabornmasterpro import stats
+
+        summary = stats.group_summary(three_groups, "g", "y", n_boot=100)
+        _fig, ax = plt.subplots()
+        sns.stripplot(data=three_groups, x="g", y="y", ax=ax)
+        y0, _ = ax.get_ylim()
+        annotate.annotate_effect_sizes(ax, summary, "g")
+        assert ax.get_ylim()[0] < y0
+        _fig2, ax2 = plt.subplots()
+        sns.stripplot(data=three_groups, x="g", y="y", ax=ax2)
+        lim = ax2.get_ylim()
+        annotate.annotate_effect_sizes(ax2, summary, "g", pad=0)
+        assert ax2.get_ylim() == lim
+
+    def test_write_json_nested_and_numpy(self, tmp_path):
+        import json
+
+        import numpy as np
+
+        payload = {"a": {"b": np.float64(1.5), "c": np.arange(3)}, "d": [1, 2]}
+        path = io.write_json(payload, tmp_path / "meta.json", provenance=True, verbose=False)
+        loaded = json.loads(path.read_text())
+        assert loaded["data"]["a"]["c"] == [0, 1, 2] and loaded["data"]["a"]["b"] == 1.5
+        assert "packages" in loaded["provenance"]

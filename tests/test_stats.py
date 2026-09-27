@@ -196,3 +196,21 @@ def test_dataframe_input_series(three_groups):
     r = S.bootstrap_ci(three_groups["y"], n_boot=100)
     assert isinstance(r, S.BootstrapResult)
     assert isinstance(pd.Series(three_groups["y"]), pd.Series)
+
+
+class TestBootstrapSamples:
+    def test_return_samples_shape_and_consistency(self, rng):
+        x = rng.normal(size=40)
+        r = S.bootstrap_ci(x, n_boot=500, seed=1, return_samples=True)
+        assert r.samples is not None and r.samples.shape == (500,)
+        lo, hi = np.percentile(r.samples, [2.5, 97.5])
+        assert r.low == pytest.approx(lo) and r.high == pytest.approx(hi)
+
+    def test_default_has_no_samples_and_to_dict_is_scalar(self, rng):
+        r = S.bootstrap_ci(rng.normal(size=30), n_boot=200, seed=1)
+        assert r.samples is None
+        assert set(r.to_dict()) == {"estimate", "low", "high", "confidence", "n_boot", "method"}
+
+    def test_group_summary_has_no_samples_column(self, three_groups):
+        cols = S.group_summary(three_groups, "g", "y", n_boot=100).columns
+        assert "samples" not in cols

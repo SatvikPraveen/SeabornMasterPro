@@ -114,3 +114,19 @@ class TestCreatePalette:
     def test_bad_type(self):
         with pytest.raises(ValueError):
             C.create_color_palette(palette_type="rainbow")
+
+
+class TestContrastOptOut:
+    def test_check_contrast_false_ignores_contrast(self):
+        strict = C.validate_palette("colorblind")
+        lenient = C.validate_palette("colorblind", check_contrast=False)
+        assert strict.distinguishable == lenient.distinguishable
+        assert lenient.contrast_ok == strict.contrast_ok  # still measured
+        assert not lenient.contrast_required
+        assert lenient.passes == lenient.distinguishable
+        assert not any("contrast" in w for w in lenient.warnings)
+
+    def test_to_dict_reports_contrast_required(self):
+        assert (
+            C.validate_palette("deep", check_contrast=False).to_dict()["contrast_required"] is False
+        )
