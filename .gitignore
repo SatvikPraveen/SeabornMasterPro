@@ -52,3 +52,13 @@ htmlcov/
 
 # ⛔ Docker build context
 docker-compose.override.yml
+
+# 🧪 Benchmarks & generated reports
+benchmarks/results/*.csv
+!benchmarks/results/.gitkeep
+
+# 🧰 Tooling caches
+.ruff_cache/
+
+# 🤖 Local assistant settings
+.claude/

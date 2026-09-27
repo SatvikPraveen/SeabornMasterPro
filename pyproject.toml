@@ -1,0 +1,130 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seabornmasterpro"
+version = "2.0.0"
+description = "Research-grade statistical visualization toolkit and curriculum built on Seaborn"
+readme = "README.md"
+license = { text = "GPL-3.0-or-later" }
+requires-python = ">=3.10"
+authors = [{ name = "Satvik Praveen", email = "satvikpraveen707@gmail.com" }]
+keywords = ["seaborn", "matplotlib", "statistics", "visualization", "reproducibility", "publication-figures"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Education",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Visualization",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+  "Typing :: Typed",
+]
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "scipy>=1.10",
+  "matplotlib>=3.7",
+  "seaborn>=0.13",
+]
+
+[project.optional-dependencies]
+stats = ["statsmodels>=0.14"]
+app = ["streamlit>=1.30", "pillow>=10"]
+notebooks = ["jupyterlab>=4", "notebook>=7", "ipykernel>=6", "nbclient>=0.9", "nbformat>=5.9"]
+export = ["openpyxl>=3.1"]
+dev = [
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "hypothesis>=6.90",
+  "ruff>=0.4",
+  "mypy>=1.8",
+  "pandas-stubs",
+  "pre-commit>=3.5",
+  "nbclient>=0.9",
+  "nbformat>=5.9",
+  "ipykernel>=6",
+  "statsmodels>=0.14",
+  "openpyxl>=3.1",
+]
+all = ["seabornmasterpro[stats,app,notebooks,export]"]
+
+[project.urls]
+Homepage = "https://github.com/SatvikPraveen/SeabornMasterPro"
+Repository = "https://github.com/SatvikPraveen/SeabornMasterPro"
+Issues = "https://github.com/SatvikPraveen/SeabornMasterPro/issues"
+Changelog = "https://github.com/SatvikPraveen/SeabornMasterPro/blob/main/CHANGELOG.md"
+
+[project.scripts]
+smp-datasets = "seabornmasterpro.datasets:main"
+smp-benchmark = "seabornmasterpro.benchmark:main"
+
+[tool.setuptools]
+packages = ["seabornmasterpro", "utils"]
+
+[tool.setuptools.package-data]
+seabornmasterpro = ["py.typed"]
+
+# ---------------------------------------------------------------------------
+# Tooling
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers --tb=short"
+markers = [
+  "slow: long-running tests (notebook execution, benchmarks)",
+  "notebooks: executes the curriculum notebooks end to end",
+]
+filterwarnings = [
+  "error::DeprecationWarning:seabornmasterpro",
+]
+
+[tool.coverage.run]
+source = ["seabornmasterpro"]
+branch = true
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "if __name__ == .__main__.:"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["notebooks", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "NPY", "PD", "RUF", "D"]
+ignore = [
+  "D100", "D104", "D105", "D107",  # module/package/magic docstrings
+  "D203", "D213",                  # numpydoc-compatible spacing
+  "PD901",                         # `df` is fine
+  "RUF001", "RUF002", "RUF003",    # allow unicode in docs/prints
+  "E501",                          # formatter handles line length
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+"examples/*" = ["D"]
+"scripts/*" = ["D"]
+"streamlit_app.py" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.mypy]
+# python_version intentionally unset: check against the running interpreter
+packages = ["seabornmasterpro"]
+strict = false
+warn_unused_ignores = true
+warn_redundant_casts = true
+check_untyped_defs = true
+ignore_missing_imports = true
