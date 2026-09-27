@@ -76,11 +76,11 @@ class BatchProcessor:
         categorical_cols = df.select_dtypes(include="object").columns
         summary: dict[str, Any] = {
             "filename": filepath.name,
-            "rows": int(len(df)),
-            "columns": int(len(df.columns)),
-            "numeric_columns": int(len(numeric_cols)),
-            "categorical_columns": int(len(categorical_cols)),
-            "missing_values": int(df.isnull().sum().sum()),
+            "rows": len(df),
+            "columns": len(df.columns),
+            "numeric_columns": len(numeric_cols),
+            "categorical_columns": len(categorical_cols),
+            "missing_values": int(df.isna().sum().sum()),
             "memory_usage_mb": float(df.memory_usage(deep=True).sum() / 1024**2),
         }
         if len(numeric_cols):
@@ -98,7 +98,9 @@ class BatchProcessor:
         if not numeric_cols:
             return None
         if len(numeric_cols) > MAX_NUMERIC_COLUMNS:
-            print(f"    • showing first {MAX_NUMERIC_COLUMNS} of {len(numeric_cols)} numeric columns")
+            print(
+                f"    • showing first {MAX_NUMERIC_COLUMNS} of {len(numeric_cols)} numeric columns"
+            )
             numeric_cols = numeric_cols[:MAX_NUMERIC_COLUMNS]
 
         n_cols = min(3, len(numeric_cols))
@@ -235,7 +237,9 @@ class BatchProcessor:
         """Cross-dataset comparison figure and CSV table."""
         if not summaries:
             return []
-        table = pd.DataFrame(summaries).drop(columns=["numeric_summary", "outputs"], errors="ignore")
+        table = pd.DataFrame(summaries).drop(
+            columns=["numeric_summary", "outputs"], errors="ignore"
+        )
 
         panels = (
             ("rows", "Dataset Sizes (Rows)", "Set2"),
@@ -246,7 +250,13 @@ class BatchProcessor:
         fig, axes = plt.subplots(2, 2, figsize=(14, 10))
         for ax, (col, title, palette) in zip(axes.ravel(), panels, strict=True):
             sns.barplot(
-                data=table, x="filename", y=col, hue="filename", legend=False, palette=palette, ax=ax
+                data=table,
+                x="filename",
+                y=col,
+                hue="filename",
+                legend=False,
+                palette=palette,
+                ax=ax,
             )
             ax.set_title(title, fontweight="bold")
             ax.set_xlabel("")

@@ -1,442 +1,291 @@
 #!/usr/bin/env python3
-"""
-Reusable Visualization Template
-================================
+"""Reusable visualization pipeline template.
 
-A production-ready template for creating Seaborn visualizations.
-Copy and modify this file for your own projects.
+Copy this file as the starting point for a new analysis script. It shows the
+structure we recommend for production use: a small pipeline class with input
+validation, structured logging, deterministic seeding, provenance-embedding
+exports from :mod:`seabornmasterpro.io`, and an argparse CLI.
 
-Usage:
+Usage::
+
     python reusable_template.py --help
-    python reusable_template.py --data my_data.csv --x column1 --y column2
+    python reusable_template.py --data ../datasets/sales_data.csv --scatter \\
+        --x "Units Sold" --y "Total Sales" --hue Region
+    python reusable_template.py --data ../datasets/sales_data.csv \\
+        --dist "Total Sales" --cat Product "Total Sales" --heatmap
 """
 
+from __future__ import annotations
+
+import argparse
+import logging
 import sys
 from pathlib import Path
-import argparse
-import json
-import logging
-from typing import Optional, List
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from matplotlib.figure import Figure
+from typing import Any
 
-# Add utils to path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from seabornmasterpro import (
+import matplotlib
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:  # allow running without `pip install -e .`
+    sys.path.insert(0, str(REPO_ROOT))
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt  # noqa: E402
+import pandas as pd  # noqa: E402
+import seaborn as sns  # noqa: E402
+from matplotlib.figure import Figure  # noqa: E402
+
+from seabornmasterpro import (  # noqa: E402
     apply_theme,
-    stylize_plot,
-    save_fig,
+    export_plot_data,
     save_publication_figure,
-    export_plot_data
+    set_seed,
+    stylize_plot,
 )
 
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
+CATEGORICAL_KINDS = ("bar", "box", "violin", "point")
 
 
 class VisualizationPipeline:
-    """
-    Reusable visualization pipeline.
-    
-    This class provides a structured approach to creating visualizations
-    with proper error handling, logging, and output management.
-    """
-    
-    def __init__(self, 
-                 data_path: Path,
-                 output_dir: Path,
-                 theme_style: str = 'whitegrid',
-                 color_palette: str = 'deep'):
-        """
-        Initialize visualization pipeline.
-        
-        Args:
-            data_path: Path to input data file
-            output_dir: Directory for saving outputs
-            theme_style: Seaborn style theme
-            color_palette: Color palette name
-        """
+    """Load a table, validate columns, draw plots and export them with provenance."""
+
+    def __init__(
+        self,
+        data_path: Path,
+        output_dir: Path,
+        *,
+        theme_style: str = "whitegrid",
+        color_palette: str = "deep",
+        formats: tuple[str, ...] = ("png",),
+        dpi: int = 300,
+        seed: int = 0,
+    ) -> None:
         self.data_path = data_path
         self.output_dir = output_dir
-        self.theme_style = theme_style
-        self.color_palette = color_palette
-        self.data = None
-        
-        # Create output directory
+        self.formats = formats
+        self.dpi = dpi
+        self.data: pd.DataFrame | None = None
+
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Apply theme
+        set_seed(seed)
         apply_theme(style=theme_style, palette=color_palette)
-        
-        logger.info(f"Initialized pipeline with style={theme_style}, palette={color_palette}")
-    
-    def load_data(self, **kwargs) -> pd.DataFrame:
-        """
-        Load data from file.
-        
-        Args:
-            **kwargs: Additional arguments for pd.read_csv
-            
-        Returns:
-            Loaded DataFrame
-        """
-        try:
-            logger.info(f"Loading data from {self.data_path}")
-            
-            if self.data_path.suffix == '.csv':
-                self.data = pd.read_csv(self.data_path, **kwargs)
-            elif self.data_path.suffix in ['.xlsx', '.xls']:
-                self.data = pd.read_excel(self.data_path, **kwargs)
-            elif self.data_path.suffix == '.json':
-                self.data = pd.read_json(self.data_path, **kwargs)
-            else:
-                raise ValueError(f"Unsupported file format: {self.data_path.suffix}")
-            
-            logger.info(f"Successfully loaded {len(self.data)} rows, {len(self.data.columns)} columns")
-            return self.data
-            
-        except Exception as e:
-            logger.error(f"Error loading data: {e}")
-            raise
-    
-    def validate_columns(self, required_cols: List[str]) -> bool:
-        """
-        Validate that required columns exist in data.
-        
-        Args:
-            required_cols: List of required column names
-            
-        Returns:
-            True if all columns exist
-        """
-        if self.data is None:
-            logger.error("Data not loaded. Call load_data() first.")
-            return False
-        
-        missing = [col for col in required_cols if col not in self.data.columns]
-        
-        if missing:
-            logger.error(f"Missing required columns: {missing}")
-            logger.info(f"Available columns: {list(self.data.columns)}")
-            return False
-        
-        return True
-    
-    def create_scatter_plot(self, 
-                           x: str, 
-                           y: str, 
-                           hue: Optional[str] = None,
-                           title: Optional[str] = None,
-                           filename: Optional[str] = None) -> Figure:
-        """
-        Create a scatter plot.
-        
-        Args:
-            x: Column name for x-axis
-            y: Column name for y-axis
-            hue: Column name for color grouping
-            title: Plot title
-            filename: Output filename (without extension)
-            
-        Returns:
-            Figure object
-        """
-        if self.data is None:
-            raise ValueError("Data not loaded. Call load_data() first.")
-            
-        required_cols = [x, y]
-        if hue:
-            required_cols.append(hue)
-        
-        if not self.validate_columns(required_cols):
-            raise ValueError("Cannot create plot: missing required columns")
-        
-        logger.info(f"Creating scatter plot: {x} vs {y}")
-        
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        sns.scatterplot(
-            data=self.data,
-            x=x,
-            y=y,
-            hue=hue,
-            s=100,
-            alpha=0.7,
-            ax=ax
-        )
-        
-        plot_title = title or f"{y} vs {x}"
-        stylize_plot(title=plot_title, xlabel=x, ylabel=y)
-        
-        if hue:
-            plt.legend(title=hue, bbox_to_anchor=(1.05, 1), loc='upper left')
-        
-        plt.tight_layout()
-        
-        if filename:
-            save_fig(self.output_dir / f"{filename}.png")
-            logger.info(f"Saved plot to {filename}.png")
-        
-        return fig
-    
-    def create_distribution_plot(self,
-                                column: str,
-                                title: Optional[str] = None,
-                                filename: Optional[str] = None) -> Figure:
-        """
-        Create a distribution plot with histogram and KDE.
-        
-        Args:
-            column: Column name to plot
-            title: Plot title
-            filename: Output filename
-            
-        Returns:
-            Figure object
-        """
-        if not self.validate_columns([column]):
-            raise ValueError("Cannot create plot: column not found")
-        
-        logger.info(f"Creating distribution plot for {column}")
-        
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        sns.histplot(
-            data=self.data,
-            x=column,
-            kde=True,
-            bins=30,
-            ax=ax
-        )
-        
-        plot_title = title or f"Distribution of {column}"
-        stylize_plot(title=plot_title, xlabel=column, ylabel="Frequency")
-        
-        if filename:
-            save_fig(self.output_dir / f"{filename}.png")
-            logger.info(f"Saved plot to {filename}.png")
-        
-        return fig
-    
-    def create_categorical_plot(self,
-                               x: str,
-                               y: str,
-                               kind: str = 'bar',
-                               title: Optional[str] = None,
-                               filename: Optional[str] = None) -> Figure:
-        """
-        Create a categorical plot.
-        
-        Args:
-            x: Categorical column name
-            y: Numeric column name
-            kind: Plot type ('bar', 'box', 'violin', 'point')
-            title: Plot title
-            filename: Output filename
-            
-        Returns:
-            Figure object
-        """
-        if not self.validate_columns([x, y]):
-            raise ValueError("Cannot create plot: missing required columns")
-        
-        logger.info(f"Creating {kind} plot: {y} by {x}")
-        
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        if kind == 'bar':
-            sns.barplot(data=self.data, x=x, y=y, errorbar=("ci", 95), ax=ax)
-        elif kind == 'box':
-            sns.boxplot(data=self.data, x=x, y=y, ax=ax)
-        elif kind == 'violin':
-            sns.violinplot(data=self.data, x=x, y=y, ax=ax)
-        elif kind == 'point':
-            sns.pointplot(data=self.data, x=x, y=y, errorbar=("ci", 95), ax=ax)
+        logger.info("Initialized pipeline with style=%s, palette=%s", theme_style, color_palette)
+
+    # ---------------------------------------------------------------- data
+    def load_data(self, **read_kwargs: Any) -> pd.DataFrame:
+        logger.info("Loading data from %s", self.data_path)
+        suffix = self.data_path.suffix.lower()
+        if suffix == ".csv":
+            self.data = pd.read_csv(self.data_path, **read_kwargs)
+        elif suffix in {".xlsx", ".xls"}:
+            self.data = pd.read_excel(self.data_path, **read_kwargs)
+        elif suffix == ".json":
+            self.data = pd.read_json(self.data_path, **read_kwargs)
+        elif suffix == ".parquet":
+            self.data = pd.read_parquet(self.data_path, **read_kwargs)
         else:
-            raise ValueError(f"Unknown plot kind: {kind}")
-        
-        plot_title = title or f"{y} by {x}"
-        stylize_plot(title=plot_title, xlabel=x, ylabel=y)
-        
-        plt.xticks(rotation=45, ha='right')
-        plt.tight_layout()
-        
-        if filename:
-            save_fig(self.output_dir / f"{filename}.png")
-            logger.info(f"Saved plot to {filename}.png")
-        
-        return fig
-    
-    def create_correlation_heatmap(self,
-                                  title: Optional[str] = None,
-                                  filename: Optional[str] = None) -> Optional[Figure]:
-        """
-        Create correlation heatmap for numeric columns.
-        
-        Args:
-            title: Plot title
-            filename: Output filename
-            
-        Returns:
-            Figure object
-        """
+            raise ValueError(f"Unsupported file format: {suffix}")
+        logger.info("Loaded %d rows, %d columns", len(self.data), len(self.data.columns))
+        return self.data
+
+    def _require(self, columns: list[str]) -> pd.DataFrame:
+        """Return the loaded frame or raise if it (or any column) is missing."""
         if self.data is None:
-            logger.error("Data not loaded. Call load_data() first.")
-            return None
-            
-        numeric_cols = self.data.select_dtypes(include=['number']).columns
-        
-        if len(numeric_cols) < 2:
-            logger.warning("Not enough numeric columns for correlation matrix")
-            return None
-        
-        logger.info(f"Creating correlation heatmap with {len(numeric_cols)} columns")
-        
-        fig, ax = plt.subplots(figsize=(10, 8))
-        
-        corr = self.data[numeric_cols].corr()
-        
-        sns.heatmap(
-            corr,
-            annot=True,
-            fmt='.2f',
-            cmap='coolwarm',
-            center=0,
-            square=True,
-            linewidths=1,
-            cbar_kws={'shrink': 0.8},
-            ax=ax
+            raise RuntimeError("Data not loaded. Call load_data() first.")
+        missing = [c for c in columns if c not in self.data.columns]
+        if missing:
+            raise KeyError(f"Missing columns {missing}; available: {list(self.data.columns)}")
+        return self.data
+
+    def _save(self, fig: Figure, filename: str | None) -> list[Path]:
+        if not filename:
+            return []
+        written = save_publication_figure(
+            fig, self.output_dir / filename, self.formats, dpi=self.dpi, verbose=False
         )
-        
-        plot_title = title or "Correlation Matrix"
-        plt.title(plot_title, fontsize=16, fontweight='bold', pad=20)
-        plt.tight_layout()
-        
-        if filename:
-            save_fig(self.output_dir / f"{filename}.png")
-            logger.info(f"Saved plot to {filename}.png")
-        
+        for path in written:
+            logger.info("Saved %s", path)
+        return written
+
+    # --------------------------------------------------------------- plots
+    def create_scatter_plot(
+        self,
+        x: str,
+        y: str,
+        hue: str | None = None,
+        title: str | None = None,
+        filename: str | None = None,
+    ) -> Figure:
+        df = self._require([x, y] + ([hue] if hue else []))
+        logger.info("Creating scatter plot: %s vs %s", x, y)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.scatterplot(data=df, x=x, y=y, hue=hue, s=60, alpha=0.7, ax=ax)
+        stylize_plot(title=title or f"{y} vs {x}", xlabel=x, ylabel=y, ax=ax)
+        if hue:
+            ax.legend(title=hue, bbox_to_anchor=(1.02, 1), loc="upper left")
+        fig.tight_layout()
+        self._save(fig, filename)
         return fig
-    
-    def export_summary(self, filename: str = "summary"):
-        """
-        Export data summary statistics.
-        
-        Args:
-            filename: Output filename (without extension)
-        """
-        if self.data is None:
-            logger.warning("No data loaded to export")
-            return
-            
+
+    def create_distribution_plot(
+        self, column: str, title: str | None = None, filename: str | None = None
+    ) -> Figure:
+        df = self._require([column])
+        logger.info("Creating distribution plot for %s", column)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.histplot(data=df, x=column, kde=True, bins=30, ax=ax)
+        stylize_plot(
+            title=title or f"Distribution of {column}", xlabel=column, ylabel="Frequency", ax=ax
+        )
+        self._save(fig, filename)
+        return fig
+
+    def create_categorical_plot(
+        self,
+        x: str,
+        y: str,
+        kind: str = "bar",
+        title: str | None = None,
+        filename: str | None = None,
+    ) -> Figure:
+        df = self._require([x, y])
+        if kind not in CATEGORICAL_KINDS:
+            raise ValueError(f"Unknown plot kind {kind!r}; choose from {CATEGORICAL_KINDS}")
+        logger.info("Creating %s plot: %s by %s", kind, y, x)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        common: dict[str, Any] = {"data": df, "x": x, "y": y, "hue": x, "legend": False, "ax": ax}
+        if kind == "bar":
+            sns.barplot(errorbar=("ci", 95), **common)
+        elif kind == "box":
+            sns.boxplot(**common)
+        elif kind == "violin":
+            sns.violinplot(**common)
+        else:
+            sns.pointplot(errorbar=("ci", 95), **common)
+        stylize_plot(title=title or f"{y} by {x}", xlabel=x, ylabel=y, rotate_xticks=45, ax=ax)
+        self._save(fig, filename)
+        return fig
+
+    def create_correlation_heatmap(
+        self, title: str | None = None, filename: str | None = None
+    ) -> Figure | None:
+        df = self._require([])
+        numeric_cols = df.select_dtypes(include="number").columns
+        if len(numeric_cols) < 2:
+            logger.warning("Not enough numeric columns for a correlation matrix")
+            return None
+        logger.info("Creating correlation heatmap with %d columns", len(numeric_cols))
+        fig, ax = plt.subplots(figsize=(10, 8))
+        sns.heatmap(
+            df[numeric_cols].corr(), annot=True, fmt=".2f", cmap="coolwarm", center=0, vmin=-1, vmax=1,
+            square=True, linewidths=1, cbar_kws={"shrink": 0.8}, ax=ax,
+        )  # fmt: skip
+        ax.set_title(title or "Correlation Matrix", fontsize=16, fontweight="bold", pad=20)
+        fig.tight_layout()
+        self._save(fig, filename)
+        return fig
+
+    # -------------------------------------------------------------- export
+    def export_summary(self, filename: str = "summary") -> Path | None:
+        df = self._require([])
         logger.info("Exporting summary statistics")
-        
-        summary = {
-            'shape': self.data.shape,
-            'columns': list(self.data.columns),
-            'dtypes': self.data.dtypes.astype(str).to_dict(),
-            'missing_values': self.data.isnull().sum().to_dict(),
-            'numeric_summary': self.data.describe().to_dict()
-        }
-        
-        out = self.output_dir / f"{filename}.json"
-        out.parent.mkdir(parents=True, exist_ok=True)
-        with open(out, "w", encoding="utf-8") as fh:
-            json.dump(summary, fh, indent=2, default=str)
-        logger.info(f"Summary exported to {out.name}")
+        summary = df.describe(include="all").T.reset_index().rename(columns={"index": "column"})
+        summary["dtype"] = summary["column"].map(df.dtypes.astype(str))
+        summary["missing"] = summary["column"].map(df.isna().sum())
+        return export_plot_data(None, summary, self.output_dir / f"{filename}.csv", verbose=False)
 
 
-def main():
-    """Main execution."""
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Reusable visualization template",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s --data sales.csv --x Quantity --y Revenue
-  %(prog)s --data data.csv --dist Price --cat Category Product
-  %(prog)s --data data.csv --heatmap
-        """
+  %(prog)s --data sales.csv --scatter --x "Units Sold" --y "Total Sales" --hue Region
+  %(prog)s --data data.csv --dist Price --cat Category Revenue --kind box
+  %(prog)s --data data.csv --heatmap --formats png pdf
+        """,
     )
-    
-    # Input/Output
-    parser.add_argument('--data', type=Path, required=True, help='Input data file')
-    parser.add_argument('--output', type=Path, default=Path('./output'),
-                       help='Output directory')
-    
-    # Plot types
-    parser.add_argument('--scatter', action='store_true', help='Create scatter plot')
-    parser.add_argument('--dist', type=str, help='Create distribution plot for column')
-    parser.add_argument('--cat', nargs=2, metavar=('X', 'Y'),
-                       help='Create categorical plot (x y)')
-    parser.add_argument('--heatmap', action='store_true', help='Create correlation heatmap')
-    
-    # Plot parameters
-    parser.add_argument('--x', type=str, help='X-axis column')
-    parser.add_argument('--y', type=str, help='Y-axis column')
-    parser.add_argument('--hue', type=str, help='Hue grouping column')
-    parser.add_argument('--kind', type=str, default='bar',
-                       choices=['bar', 'box', 'violin', 'point'],
-                       help='Categorical plot type')
-    
-    # Styling
-    parser.add_argument('--style', type=str, default='whitegrid',
-                       choices=['darkgrid', 'whitegrid', 'dark', 'white', 'ticks'],
-                       help='Plot style')
-    parser.add_argument('--palette', type=str, default='deep',
-                       help='Color palette')
-    
-    args = parser.parse_args()
-    
-    # Initialize pipeline
-    print("\n" + "="*60)
+    parser.add_argument("--data", type=Path, required=True, help="Input data file")
+    parser.add_argument("--output", type=Path, default=Path("./output"), help="Output directory")
+
+    parser.add_argument(
+        "--scatter", action="store_true", help="Create scatter plot (needs --x/--y)"
+    )
+    parser.add_argument("--dist", metavar="COLUMN", help="Create distribution plot for column")
+    parser.add_argument("--cat", nargs=2, metavar=("X", "Y"), help="Create categorical plot")
+    parser.add_argument("--heatmap", action="store_true", help="Create correlation heatmap")
+
+    parser.add_argument("--x", help="X-axis column")
+    parser.add_argument("--y", help="Y-axis column")
+    parser.add_argument("--hue", help="Hue grouping column")
+    parser.add_argument(
+        "--kind", default="bar", choices=CATEGORICAL_KINDS, help="Categorical plot type"
+    )
+
+    parser.add_argument(
+        "--style",
+        default="whitegrid",
+        choices=["darkgrid", "whitegrid", "dark", "white", "ticks"],
+        help="Seaborn axes style",
+    )
+    parser.add_argument("--palette", default="deep", help="Colour palette")
+    parser.add_argument(
+        "--formats",
+        nargs="+",
+        default=["png"],
+        choices=["png", "pdf", "svg"],
+        help="Export formats",
+    )
+    parser.add_argument("--dpi", type=int, default=300, help="Raster resolution")
+    parser.add_argument("--seed", type=int, default=0, help="Random seed")
+    args = parser.parse_args(argv)
+
+    if args.scatter and not (args.x and args.y):
+        parser.error("--scatter requires --x and --y")
+
+    print("\n" + "=" * 60)
     print("🎨 VISUALIZATION PIPELINE")
-    print("="*60 + "\n")
-    
+    print("=" * 60 + "\n")
+
     pipeline = VisualizationPipeline(
         data_path=args.data,
         output_dir=args.output,
         theme_style=args.style,
-        color_palette=args.palette
+        color_palette=args.palette,
+        formats=tuple(args.formats),
+        dpi=args.dpi,
+        seed=args.seed,
     )
-    
-    # Load data
     pipeline.load_data()
-    
-    # Create plots based on arguments
+
     plots_created = 0
-    
-    if args.scatter and args.x and args.y:
-        pipeline.create_scatter_plot(args.x, args.y, args.hue, filename='scatter')
+    if args.scatter:
+        pipeline.create_scatter_plot(args.x, args.y, args.hue, filename="scatter")
         plots_created += 1
-    
     if args.dist:
-        pipeline.create_distribution_plot(args.dist, filename='distribution')
+        pipeline.create_distribution_plot(args.dist, filename="distribution")
         plots_created += 1
-    
     if args.cat:
-        pipeline.create_categorical_plot(args.cat[0], args.cat[1], args.kind, filename='categorical')
+        pipeline.create_categorical_plot(
+            args.cat[0], args.cat[1], args.kind, filename="categorical"
+        )
         plots_created += 1
-    
-    if args.heatmap:
-        pipeline.create_correlation_heatmap(filename='heatmap')
+    if args.heatmap and pipeline.create_correlation_heatmap(filename="heatmap") is not None:
         plots_created += 1
-    
-    # Export summary
+    plt.close("all")
+
     pipeline.export_summary()
-    
-    print("\n" + "="*60)
+
+    print("\n" + "=" * 60)
     print(f"✅ Created {plots_created} visualization(s)")
     print(f"📁 Output directory: {args.output}")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

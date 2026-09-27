@@ -96,7 +96,10 @@ def demonstrate_color_palettes(output_dir: Path) -> None:
     """Sequential, diverging and qualitative palettes from the package."""
     palettes = (
         ("Sequential (ordered data)", create_color_palette(n_colors=8, palette_type="sequential")),
-        ("Diverging (meaningful centre)", create_color_palette(n_colors=9, palette_type="diverging")),
+        (
+            "Diverging (meaningful centre)",
+            create_color_palette(n_colors=9, palette_type="diverging"),
+        ),
         ("Qualitative (categories)", create_color_palette(n_colors=6, palette_type="qualitative")),
     )
     fig, axes = plt.subplots(3, 1, figsize=(12, 6))
@@ -114,11 +117,20 @@ def demonstrate_custom_palette(output_dir: Path) -> None:
     fig, axes = plt.subplots(1, 2, figsize=(14, 5), sharey=True)
     for ax, (title, palette) in zip(
         axes,
-        (("Custom Brand Colors", list(BRAND_COLORS.values())), ("CVD-Safe Palette", ACCESSIBLE_PALETTE)),
+        (
+            ("Custom Brand Colors", list(BRAND_COLORS.values())),
+            ("CVD-Safe Palette", ACCESSIBLE_PALETTE),
+        ),
         strict=True,
     ):
         sns.barplot(
-            data=data, x="Category", y="Values", hue="Category", legend=False, palette=palette, ax=ax
+            data=data,
+            x="Category",
+            y="Values",
+            hue="Category",
+            legend=False,
+            palette=palette,
+            ax=ax,
         )
         ax.set_title(title, fontweight="bold", fontsize=14)
         ax.set_ylabel("Performance Score")
@@ -163,7 +175,9 @@ def demonstrate_gradient_palette(output_dir: Path) -> None:
     sns.heatmap(matrix, cmap=cmap, ax=axes[0], cbar_kws={"label": "Value"})
     axes[0].set_title("Custom Gradient Heatmap", fontweight="bold", fontsize=14)
 
-    scatter = axes[1].scatter(x, y, c=y, cmap=cmap, s=200, alpha=0.8, edgecolors="black", linewidths=1)
+    scatter = axes[1].scatter(
+        x, y, c=y, cmap=cmap, s=200, alpha=0.8, edgecolors="black", linewidths=1
+    )
     fig.colorbar(scatter, ax=axes[1], label="Y value")
     axes[1].set_title("Custom Gradient Scatter", fontweight="bold", fontsize=14)
     axes[1].set_xlabel("X")
@@ -204,9 +218,12 @@ def check_palette_accessibility(
     kinds = list(next(iter(grids.values())).keys())
 
     fig, axes = plt.subplots(
-        len(palettes), len(kinds), figsize=(3.2 * len(kinds), 1.4 * len(palettes) + 0.8), squeeze=False
+        len(palettes),
+        len(kinds),
+        figsize=(3.2 * len(kinds), 1.4 * len(palettes) + 0.8),
+        squeeze=False,
     )
-    print("\n  Palette accessibility (CIELAB ΔE, threshold %.0f):" % threshold)
+    print(f"\n  Palette accessibility (CIELAB ΔE, threshold {threshold:.0f}):")
     for row, (name, pal) in enumerate(palettes.items()):
         report = validate_palette(pal, threshold=threshold)
         reports[name] = report.to_dict()
@@ -223,7 +240,9 @@ def check_palette_accessibility(
             if row == 0:
                 ax.set_title(kind, fontsize=10, fontweight="bold")
             if col == 0:
-                ax.set_ylabel(f"{name}\n[{verdict}]", rotation=0, ha="right", va="center", fontsize=9)
+                ax.set_ylabel(
+                    f"{name}\n[{verdict}]", rotation=0, ha="right", va="center", fontsize=9
+                )
     fig.suptitle("Palettes under simulated colour-vision deficiency", fontweight="bold")
     fig.tight_layout()
     save_fig(output_dir / "cvd_simulation.png", fig=fig)

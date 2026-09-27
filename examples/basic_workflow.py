@@ -117,9 +117,7 @@ def create_correlation_heatmap(df: pd.DataFrame, output_dir: Path) -> Path | Non
 def _pick_generic_columns(df: pd.DataFrame) -> tuple[str | None, str | None]:
     """Return (categorical, numeric) column names suitable for a bar plot."""
     numeric = [c for c in df.columns if pd.api.types.is_numeric_dtype(df[c])]
-    categorical = [
-        c for c in df.columns if df[c].dtype == object and 1 < df[c].nunique() <= 12
-    ]
+    categorical = [c for c in df.columns if df[c].dtype == object and 1 < df[c].nunique() <= 12]
     return (categorical[0] if categorical else None, numeric[-1] if numeric else None)
 
 

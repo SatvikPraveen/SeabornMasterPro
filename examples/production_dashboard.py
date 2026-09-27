@@ -55,7 +55,14 @@ class DashboardGenerator:
         fig.text(0.5, 0.985, title, ha="center", va="top", fontsize=20, fontweight="bold")
         stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
         fig.text(
-            0.99, 0.01, f"Generated: {stamp}", ha="right", va="bottom", fontsize=8, style="italic", alpha=0.7
+            0.99,
+            0.01,
+            f"Generated: {stamp}",
+            ha="right",
+            va="bottom",
+            fontsize=8,
+            style="italic",
+            alpha=0.7,
         )
 
     @staticmethod
@@ -74,7 +81,9 @@ class DashboardGenerator:
         df = self.data.copy()
         session, views, age = "Session Time (min)", "Page Views", "Age"
         df["Age Group"] = pd.cut(
-            df[age], bins=[17, 25, 35, 45, 55, 100], labels=["18-25", "26-35", "36-45", "46-55", "56+"]
+            df[age],
+            bins=[17, 25, 35, 45, 55, 100],
+            labels=["18-25", "26-35", "36-45", "46-55", "56+"],
         )
 
         fig = plt.figure(figsize=(16, 12))
@@ -163,7 +172,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dataset", default="ecommerce_data", help="Dataset name (without .csv)")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="Output directory")
     parser.add_argument(
-        "--format", nargs="+", default=["png"], choices=["png", "pdf", "svg"], help="Output format(s)"
+        "--format",
+        nargs="+",
+        default=["png"],
+        choices=["png", "pdf", "svg"],
+        help="Output format(s)",
     )
     parser.add_argument("--dpi", type=int, default=300, help="Raster resolution")
     parser.add_argument("--title", default=None, help="Override the dashboard title")
@@ -191,7 +204,7 @@ def main(argv: list[str] | None = None) -> int:
     plt.close(fig)
 
     record = figure_provenance(
-        {"dataset": str(data_path.relative_to(REPO_ROOT)), "n_rows": int(len(df)), "dpi": args.dpi}
+        {"dataset": str(data_path.relative_to(REPO_ROOT)), "n_rows": len(df), "dpi": args.dpi}
     )
     sidecar = base.with_suffix(".provenance.json")
     with open(sidecar, "w", encoding="utf-8") as fh:
@@ -199,7 +212,9 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"\n✅ Dashboard saved to: {args.output}")
     print(f"   Files: {', '.join(p.name for p in written)} + {sidecar.name}")
-    print(f"   Git revision: {record.get('git_revision')}  |  seaborn {record['packages'].get('seaborn')}")
+    print(
+        f"   Git revision: {record.get('git_revision')}  |  seaborn {record['packages'].get('seaborn')}"
+    )
     print("\n" + "=" * 60 + "\n")
     return 0
 
