@@ -1,0 +1,181 @@
+Arm,Age,Sex,Baseline,Outcome,Site
+Placebo,37,F,45.0,56.6,Site 3
+Placebo,58,F,49.9,49.4,Site 3
+Placebo,29,F,48.4,52.9,Site 1
+Placebo,35,F,51.0,44.6,Site 1
+Placebo,40,M,49.6,50.4,Site 2
+Placebo,40,F,59.6,55.2,Site 3
+Placebo,70,F,43.4,38.7,Site 3
+Placebo,64,M,56.4,45.7,Site 1
+Placebo,70,M,45.2,53.0,Site 3
+Placebo,74,M,41.3,67.0,Site 1
+Placebo,28,M,56.5,55.0,Site 2
+Placebo,32,M,44.9,49.1,Site 3
+Placebo,68,F,45.3,42.8,Site 1
+Placebo,28,M,38.3,51.7,Site 2
+Placebo,33,M,33.3,27.8,Site 1
+Placebo,34,M,52.4,50.3,Site 1
+Placebo,70,M,39.8,46.1,Site 3
+Placebo,42,M,53.4,46.7,Site 1
+Placebo,38,M,60.9,70.5,Site 3
+Placebo,33,M,47.2,30.1,Site 1
+Placebo,47,M,40.1,48.6,Site 3
+Placebo,54,M,50.8,51.0,Site 3
+Placebo,65,F,53.3,54.5,Site 3
+Placebo,55,M,46.2,36.9,Site 2
+Placebo,74,M,48.1,46.3,Site 3
+Placebo,30,F,57.3,39.4,Site 3
+Placebo,49,F,56.9,50.3,Site 3
+Placebo,53,F,53.0,52.3,Site 3
+Placebo,59,F,41.9,50.4,Site 3
+Placebo,25,M,47.6,48.4,Site 3
+Placebo,35,M,52.2,52.1,Site 2
+Placebo,48,F,46.5,51.2,Site 3
+Placebo,28,M,43.7,52.6,Site 3
+Placebo,73,F,42.6,49.4,Site 2
+Placebo,57,F,43.6,35.1,Site 1
+Placebo,64,F,43.3,42.8,Site 3
+Placebo,50,F,44.8,52.3,Site 2
+Placebo,54,M,56.0,43.9,Site 1
+Placebo,42,F,42.4,42.8,Site 1
+Placebo,41,M,54.2,51.8,Site 1
+Placebo,31,M,50.9,50.1,Site 2
+Placebo,35,M,49.0,57.3,Site 3
+Placebo,63,F,42.2,53.2,Site 1
+Placebo,47,M,44.8,46.0,Site 3
+Placebo,66,F,61.8,53.0,Site 1
+Placebo,38,M,48.7,27.2,Site 2
+Placebo,61,M,51.8,44.2,Site 2
+Placebo,68,F,52.6,49.5,Site 2
+Placebo,66,F,55.4,32.0,Site 3
+Placebo,35,M,46.3,47.2,Site 3
+Placebo,43,F,43.7,51.4,Site 2
+Placebo,38,M,47.6,58.2,Site 1
+Placebo,64,F,46.2,52.9,Site 2
+Placebo,65,M,53.5,65.9,Site 3
+Placebo,47,F,49.3,62.4,Site 3
+Placebo,38,F,49.7,37.2,Site 1
+Placebo,28,M,49.0,48.3,Site 3
+Placebo,38,F,56.6,50.0,Site 1
+Placebo,32,F,44.2,50.2,Site 1
+Placebo,28,F,44.7,44.9,Site 3
+Low Dose,56,M,52.1,57.8,Site 2
+Low Dose,52,M,41.9,57.6,Site 2
+Low Dose,30,M,35.9,55.7,Site 3
+Low Dose,66,F,51.1,49.3,Site 2
+Low Dose,47,F,50.7,36.2,Site 3
+Low Dose,44,M,45.5,65.3,Site 1
+Low Dose,57,F,40.3,62.7,Site 3
+Low Dose,26,M,57.2,46.9,Site 1
+Low Dose,46,F,59.2,63.7,Site 3
+Low Dose,54,M,59.0,56.2,Site 1
+Low Dose,56,M,48.3,52.3,Site 2
+Low Dose,57,M,49.0,53.1,Site 1
+Low Dose,46,F,49.0,44.8,Site 3
+Low Dose,31,F,47.0,51.5,Site 3
+Low Dose,35,F,39.4,52.2,Site 3
+Low Dose,55,M,43.8,54.4,Site 1
+Low Dose,30,F,53.7,47.6,Site 2
+Low Dose,62,F,48.0,56.8,Site 3
+Low Dose,57,M,44.7,46.7,Site 3
+Low Dose,73,F,46.2,47.7,Site 3
+Low Dose,27,F,60.2,55.6,Site 2
+Low Dose,58,M,58.4,49.9,Site 3
+Low Dose,33,F,55.7,43.8,Site 2
+Low Dose,53,M,49.2,47.9,Site 3
+Low Dose,67,M,39.5,44.7,Site 3
+Low Dose,57,F,49.4,54.5,Site 3
+Low Dose,65,M,45.7,59.4,Site 1
+Low Dose,44,M,52.3,59.5,Site 2
+Low Dose,48,F,55.2,47.3,Site 1
+Low Dose,52,F,43.2,48.6,Site 1
+Low Dose,41,F,57.2,57.0,Site 1
+Low Dose,47,F,48.4,36.8,Site 3
+Low Dose,37,F,48.6,61.6,Site 1
+Low Dose,52,M,44.1,64.5,Site 1
+Low Dose,68,M,46.7,59.6,Site 2
+Low Dose,57,M,48.7,31.2,Site 1
+Low Dose,48,F,46.6,55.4,Site 1
+Low Dose,57,M,45.8,34.0,Site 1
+Low Dose,33,F,45.2,61.7,Site 1
+Low Dose,67,M,62.3,33.3,Site 3
+Low Dose,44,F,46.6,38.5,Site 2
+Low Dose,33,M,53.3,57.3,Site 1
+Low Dose,41,F,48.5,38.7,Site 3
+Low Dose,36,F,27.6,22.2,Site 3
+Low Dose,45,M,69.9,45.2,Site 2
+Low Dose,41,F,48.0,57.3,Site 3
+Low Dose,45,M,44.1,40.4,Site 1
+Low Dose,71,F,57.2,43.2,Site 2
+Low Dose,64,M,58.4,56.1,Site 1
+Low Dose,57,M,44.0,52.2,Site 3
+Low Dose,68,M,42.2,64.4,Site 2
+Low Dose,31,M,41.8,60.5,Site 1
+Low Dose,61,M,50.4,49.8,Site 1
+Low Dose,40,F,49.1,45.9,Site 2
+Low Dose,63,F,53.5,64.4,Site 2
+Low Dose,60,F,47.2,45.9,Site 3
+Low Dose,69,F,44.4,41.3,Site 2
+Low Dose,35,M,48.8,57.6,Site 3
+Low Dose,33,F,44.0,46.2,Site 1
+Low Dose,62,F,52.6,38.0,Site 1
+High Dose,37,M,49.6,61.1,Site 2
+High Dose,65,M,47.6,48.0,Site 1
+High Dose,64,M,45.0,70.2,Site 1
+High Dose,64,M,46.0,47.2,Site 3
+High Dose,48,M,47.8,59.5,Site 3
+High Dose,46,F,46.4,64.2,Site 1
+High Dose,65,M,46.4,62.6,Site 3
+High Dose,26,M,61.4,67.7,Site 3
+High Dose,67,M,38.7,35.2,Site 3
+High Dose,47,F,33.6,28.9,Site 2
+High Dose,54,M,50.7,61.5,Site 1
+High Dose,57,M,57.7,63.9,Site 3
+High Dose,25,M,46.2,74.9,Site 3
+High Dose,32,M,53.9,56.5,Site 1
+High Dose,51,M,59.6,58.1,Site 3
+High Dose,53,M,46.4,40.1,Site 1
+High Dose,66,M,49.5,63.3,Site 2
+High Dose,70,M,42.3,74.7,Site 3
+High Dose,32,M,43.6,52.9,Site 1
+High Dose,32,M,45.2,63.5,Site 1
+High Dose,49,M,53.2,73.4,Site 1
+High Dose,59,F,58.5,74.1,Site 3
+High Dose,56,M,52.9,70.3,Site 3
+High Dose,44,M,42.0,69.8,Site 2
+High Dose,50,F,42.6,17.0,Site 2
+High Dose,63,M,45.5,35.5,Site 1
+High Dose,43,F,48.2,62.8,Site 3
+High Dose,55,M,52.2,38.7,Site 1
+High Dose,30,M,37.7,68.5,Site 1
+High Dose,45,F,40.8,50.3,Site 1
+High Dose,58,F,60.7,41.4,Site 2
+High Dose,49,M,51.5,69.4,Site 3
+High Dose,38,M,51.1,51.0,Site 1
+High Dose,28,F,38.4,45.1,Site 3
+High Dose,45,F,55.4,68.4,Site 2
+High Dose,62,M,52.0,56.3,Site 2
+High Dose,35,M,38.0,42.3,Site 1
+High Dose,41,M,39.6,43.9,Site 3
+High Dose,36,F,52.7,39.2,Site 1
+High Dose,73,M,39.1,76.4,Site 3
+High Dose,53,F,52.5,74.7,Site 3
+High Dose,69,F,44.5,58.2,Site 1
+High Dose,48,M,52.9,50.6,Site 1
+High Dose,31,M,54.7,64.9,Site 2
+High Dose,51,F,61.3,57.7,Site 1
+High Dose,73,F,35.9,65.8,Site 2
+High Dose,61,M,38.0,64.2,Site 3
+High Dose,43,F,47.5,58.7,Site 1
+High Dose,59,M,60.1,56.6,Site 3
+High Dose,60,M,51.8,65.9,Site 1
+High Dose,36,F,38.7,56.8,Site 1
+High Dose,70,M,54.6,39.2,Site 3
+High Dose,52,F,47.7,61.5,Site 2
+High Dose,35,F,57.3,81.1,Site 2
+High Dose,60,F,40.1,52.5,Site 1
+High Dose,38,M,54.7,62.3,Site 3
+High Dose,25,M,58.0,55.6,Site 3
+High Dose,69,F,41.3,60.5,Site 3
+High Dose,30,M,49.2,54.7,Site 3
+High Dose,53,M,51.4,87.1,Site 1

@@ -1,0 +1,59 @@
+{
+  "files": {
+    "clinical_trial.csv": {
+      "bytes": 5614,
+      "sha256": "c779c2ae7f93ead0e401eb21b9675504a3590309c74e8be3ba34f760be4008a2"
+    },
+    "ecommerce_data.csv": {
+      "bytes": 1599,
+      "sha256": "d60d6693eb3be70533a57fecc0248adb6371c06c37e5d109f9606622eaaa82f8"
+    },
+    "employee_data.csv": {
+      "bytes": 3389,
+      "sha256": "bd82eda181514042e944cb281015b136f7bef3f37a0677f77aa70862c5e96687"
+    },
+    "gene_expression.csv": {
+      "bytes": 6564,
+      "sha256": "754abf1bd3bd1772507ade39b6f0addc634d037f13780404676f31f172fc2987"
+    },
+    "marketing_campaign.csv": {
+      "bytes": 2859,
+      "sha256": "1a16a99e8e181f78e3f4d8283cc55da10ce22a7376e59e2a2357872dff717f34"
+    },
+    "sales_data.csv": {
+      "bytes": 6429,
+      "sha256": "3da822c42bba357fe517c7c2c9a3f2529b897c8a0410b8ae4024fbf32eed0a11"
+    },
+    "sensor_readings.csv": {
+      "bytes": 362043,
+      "sha256": "4b44cb5fef97fe62225d046ad0648801f77a9fcf40dac100b2bb35829c5b6e20"
+    },
+    "student_scores.csv": {
+      "bytes": 1601,
+      "sha256": "3e11c939e21c0dfd0ef9048ae41b1a0e0976b60a9741293cee87184df54a38a4"
+    },
+    "web_traffic.csv": {
+      "bytes": 4565,
+      "sha256": "0d52bf17e89270bdadc3ddba4ab8eccfa0844b69008b4d381d35a74b37ae0e38"
+    }
+  },
+  "generated": {
+    "git_revision": "0abca95",
+    "implementation": "CPython",
+    "machine": "arm64",
+    "packages": {
+      "matplotlib": "3.11.2",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6",
+      "scipy": "1.18.1",
+      "seaborn": "0.13.2",
+      "sklearn": "1.9.1",
+      "statsmodels": "0.15.0"
+    },
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.13",
+    "seabornmasterpro": "2.0.0",
+    "timestamp_utc": "2026-09-27T04:39:29+00:00"
+  },
+  "legacy_seed": 0
+}
