@@ -55,11 +55,7 @@ This guide provides battle-tested best practices for creating effective, publica
 
 ```python
 # Good: Consistent color mapping
-category_colors = {
-    'A': '#FF6B6B',
-    'B': '#4ECDC4',
-    'C': '#45B7D1'
-}
+category_colors = {"A": "#FF6B6B", "B": "#4ECDC4", "C": "#45B7D1"}
 sns.barplot(..., palette=category_colors)
 sns.boxplot(..., palette=category_colors)
 ```
@@ -91,7 +87,7 @@ sns.relplot(..., height=5, aspect=1.5)  # height * aspect = width
 - **Print/Publication**: 300-600 DPI
 
 ```python
-plt.savefig('plot.png', dpi=300, bbox_inches='tight')
+plt.savefig("plot.png", dpi=300, bbox_inches="tight")
 ```
 
 ---
@@ -106,10 +102,10 @@ plt.savefig('plot.png', dpi=300, bbox_inches='tight')
 4. **Data Source:** In caption or subtitle
 
 ```python
-plt.title("Monthly Sales Trends by Region (2024)", fontweight='bold', fontsize=14)
+plt.title("Monthly Sales Trends by Region (2024)", fontweight="bold", fontsize=14)
 plt.xlabel("Month", fontsize=12)
 plt.ylabel("Sales (USD)", fontsize=12)
-plt.legend(title="Region", loc='upper left')
+plt.legend(title="Region", loc="upper left")
 ```
 
 ### **Fonts:**
@@ -126,13 +122,13 @@ plt.legend(title="Region", loc='upper left')
 
 ```python
 # Confidence Interval (default: 95%)
-sns.barplot(..., errorbar='ci')  # Use for: inferring population mean
+sns.barplot(..., errorbar="ci")  # Use for: inferring population mean
 
 # Standard Deviation
-sns.barplot(..., errorbar='sd')  # Use for: showing data spread
+sns.barplot(..., errorbar="sd")  # Use for: showing data spread
 
 # Standard Error
-sns.barplot(..., errorbar='se')  # Use for: precision of mean estimate
+sns.barplot(..., errorbar="se")  # Use for: precision of mean estimate
 
 # No error bars
 sns.barplot(..., errorbar=None)  # Use when: clutters the plot
@@ -175,25 +171,25 @@ ax.set_ylim(0, 100)
 sns.scatterplot(...)
 
 # ✅ Good: Use hexbin or KDE
-sns.jointplot(..., kind='hex')
+sns.jointplot(..., kind="hex")
 ```
 
 ### **4. Rainbow Palettes for Sequential Data**
 ```python
 # ❌ Bad: Rainbow colors don't show order
-sns.heatmap(..., cmap='rainbow')
+sns.heatmap(..., cmap="rainbow")
 
 # ✅ Good: Sequential palette
-sns.heatmap(..., cmap='Blues')
+sns.heatmap(..., cmap="Blues")
 ```
 
 ### **5. Missing Context**
 ```python
 # ❌ Bad: No title, labels, or units
-sns.barplot(x='category', y='value', data=df)
+sns.barplot(x="category", y="value", data=df)
 
 # ✅ Good: Descriptive and complete
-sns.barplot(x='category', y='value', data=df)
+sns.barplot(x="category", y="value", data=df)
 plt.title("Average Sales by Category")
 plt.xlabel("Product Category")
 plt.ylabel("Average Sales ($)")
@@ -222,29 +218,21 @@ Before finalizing any visualization:
 
 ### Before (Poor Practice):
 ```python
-sns.barplot(x='day', y='total_bill', data=tips)
+sns.barplot(x="day", y="total_bill", data=tips)
 plt.show()
 ```
 
 ### After (Best Practice):
 ```python
 # Apply consistent theme
-sns.set_theme(style='whitegrid', context='notebook', palette='Set2')
+sns.set_theme(style="whitegrid", context="notebook", palette="Set2")
 
 # Create plot with proper sizing
 plt.figure(figsize=(10, 6))
-sns.barplot(
-    data=tips,
-    x='day',
-    y='total_bill',
-    errorbar='ci',
-    palette='Set2',
-    alpha=0.8
-)
+sns.barplot(data=tips, x="day", y="total_bill", errorbar="ci", palette="Set2", alpha=0.8)
 
 # Add descriptive labels
-plt.title("Average Restaurant Bill by Day of Week", 
-          fontweight='bold', fontsize=14)
+plt.title("Average Restaurant Bill by Day of Week", fontweight="bold", fontsize=14)
 plt.xlabel("Day of Week", fontsize=12)
 plt.ylabel("Average Total Bill ($)", fontsize=12)
 
@@ -253,7 +241,7 @@ plt.xticks(rotation=0)
 
 # Save with high resolution
 plt.tight_layout()
-plt.savefig('restaurant_bills_by_day.png', dpi=300, bbox_inches='tight')
+plt.savefig("restaurant_bills_by_day.png", dpi=300, bbox_inches="tight")
 plt.show()
 ```
 

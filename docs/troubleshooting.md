@@ -34,7 +34,8 @@ ImportError: Cannot load backend 'TkAgg'
 ```python
 # Add before importing matplotlib/seaborn
 import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend
+
+matplotlib.use("Agg")  # Use non-interactive backend
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -46,7 +47,7 @@ import matplotlib.pyplot as plt
 
 ### **Problem: Plots not showing**
 ```python
-sns.histplot(data=df, x='column')
+sns.histplot(data=df, x="column")
 # Nothing appears!
 ```
 
@@ -110,39 +111,39 @@ sns.relplot(..., height=5, aspect=1.5)  # width = height * aspect
 
 ### **Problem: Colors not changing**
 ```python
-sns.barplot(..., palette='Set2')  # Still using default colors!
+sns.barplot(..., palette="Set2")  # Still using default colors!
 ```
 
 **Solution:**
 ```python
 # palette parameter must match the hue parameter
-sns.barplot(data=df, x='category', y='value', hue='group', palette='Set2')
+sns.barplot(data=df, x="category", y="value", hue="group", palette="Set2")
 #                                                  ↑           ↑
 #                                              These must align
 
 # Without hue, use 'color' instead
-sns.barplot(data=df, x='category', y='value', color='steelblue')
+sns.barplot(data=df, x="category", y="value", color="steelblue")
 ```
 
 ---
 
 ### **Problem: Legend not appearing**
 ```python
-sns.scatterplot(data=df, x='x', y='y', hue='category')
+sns.scatterplot(data=df, x="x", y="y", hue="category")
 # No legend shows!
 ```
 
 **Solution:**
 ```python
 # Ensure you're using hue/style/size
-sns.scatterplot(data=df, x='x', y='y', hue='category')
+sns.scatterplot(data=df, x="x", y="y", hue="category")
 plt.legend()  # Explicitly add legend
 
 # Or position it
-plt.legend(loc='upper right', title='Category')
+plt.legend(loc="upper right", title="Category")
 
 # For figure-level plots
-g = sns.relplot(data=df, x='x', y='y', hue='category')
+g = sns.relplot(data=df, x="x", y="y", hue="category")
 g.add_legend()
 ```
 
@@ -150,18 +151,18 @@ g.add_legend()
 
 ### **Problem: Theme not applying**
 ```python
-sns.set_theme(style='darkgrid')
+sns.set_theme(style="darkgrid")
 # Still looks like default!
 ```
 
 **Solution:**
 ```python
 # Apply theme BEFORE creating plots
-sns.set_theme(style='darkgrid')  # Do this first
+sns.set_theme(style="darkgrid")  # Do this first
 sns.scatterplot(...)  # Then create plots
 
 # If using figure-level functions
-sns.set_theme(style='darkgrid')
+sns.set_theme(style="darkgrid")
 g = sns.relplot(...)  # Theme will apply
 ```
 
@@ -217,14 +218,14 @@ plt.ylim(0, 100)
 ```python
 # For axes-level plots
 sns.scatterplot(...)
-plt.xlabel('X Variable')
-plt.ylabel('Y Variable')
-plt.title('My Plot Title')
+plt.xlabel("X Variable")
+plt.ylabel("Y Variable")
+plt.title("My Plot Title")
 
 # For figure-level plots
 g = sns.relplot(...)
-g.set_axis_labels('X Variable', 'Y Variable')
-g.fig.suptitle('My Plot Title', y=1.02)
+g.set_axis_labels("X Variable", "Y Variable")
+g.fig.suptitle("My Plot Title", y=1.02)
 ```
 
 ---
@@ -233,7 +234,7 @@ g.fig.suptitle('My Plot Title', y=1.02)
 
 ### **Problem: KeyError: 'column_name'**
 ```python
-KeyError: 'total_bill'
+KeyError: "total_bill"
 ```
 
 **Solution:**
@@ -246,7 +247,7 @@ df.columns = df.columns.str.strip()  # Remove whitespace
 df.columns = df.columns.str.lower()  # Lowercase all
 
 # Or use rename
-df = df.rename(columns={'Total Bill': 'total_bill'})
+df = df.rename(columns={"Total Bill": "total_bill"})
 ```
 
 ---
@@ -259,10 +260,10 @@ TypeError: unhashable type: 'list'
 **Solution:**
 ```python
 # Trying to use list as hue
-sns.scatterplot(data=df, x='x', y='y', hue=['A', 'B'])  # ❌ Wrong
+sns.scatterplot(data=df, x="x", y="y", hue=["A", "B"])  # ❌ Wrong
 
 # Use column name instead
-sns.scatterplot(data=df, x='x', y='y', hue='category')  # ✅ Correct
+sns.scatterplot(data=df, x="x", y="y", hue="category")  # ✅ Correct
 ```
 
 ---
@@ -278,11 +279,11 @@ sns.scatterplot(data=df, x='x', y='y', hue='category')  # ✅ Correct
 print(df.isna().sum())
 
 # Drop NaN
-df_clean = df.dropna(subset=['x', 'y'])
-sns.scatterplot(data=df_clean, x='x', y='y')
+df_clean = df.dropna(subset=["x", "y"])
+sns.scatterplot(data=df_clean, x="x", y="y")
 
 # Or check data range
-print(df[['x', 'y']].describe())
+print(df[["x", "y"]].describe())
 
 # Verify data types
 print(df.dtypes)
@@ -303,10 +304,12 @@ ValueError: setting an array element with a sequence
 def wrong_estimator(x):
     return x  # Returns array! ❌
 
-def correct_estimator(x):
-   return x.mean()  # Returns single value ✅
 
-sns.barplot(data=df, x='category', y='value', estimator=correct_estimator)
+def correct_estimator(x):
+    return x.mean()  # Returns single value ✅
+
+
+sns.barplot(data=df, x="category", y="value", estimator=correct_estimator)
 ```
 
 ---
@@ -319,11 +322,11 @@ sns.barplot(data=df, x='category', y='value', estimator=correct_estimator)
 **Solution:**
 ```python
 # Choose appropriate error bar type
-sns.barplot(..., errorbar='ci')   # 95% confidence interval (default)
-sns.barplot(..., errorbar='sd')   # Standard deviation
-sns.barplot(..., errorbar='se')   # Standard error
-sns.barplot(..., errorbar=('ci', 99))  # 99% CI
-sns.barplot(..., errorbar=None)   # No error bars
+sns.barplot(..., errorbar="ci")  # 95% confidence interval (default)
+sns.barplot(..., errorbar="sd")  # Standard deviation
+sns.barplot(..., errorbar="se")  # Standard error
+sns.barplot(..., errorbar=("ci", 99))  # 99% CI
+sns.barplot(..., errorbar=None)  # No error bars
 ```
 
 ---
@@ -332,7 +335,7 @@ sns.barplot(..., errorbar=None)   # No error bars
 
 ### **Problem: Saved figure is blank/empty**
 ```python
-plt.savefig('plot.png')
+plt.savefig("plot.png")
 sns.scatterplot(...)  # Wrong order!
 ```
 
@@ -340,7 +343,7 @@ sns.scatterplot(...)  # Wrong order!
 ```python
 # Create plot FIRST, then save
 sns.scatterplot(...)
-plt.savefig('plot.png', dpi=300, bbox_inches='tight')
+plt.savefig("plot.png", dpi=300, bbox_inches="tight")
 plt.show()  # Show after saving
 ```
 
@@ -354,11 +357,11 @@ plt.show()  # Show after saving
 **Solution:**
 ```python
 # Use bbox_inches='tight'
-plt.savefig('plot.png', bbox_inches='tight')
+plt.savefig("plot.png", bbox_inches="tight")
 
 # Or adjust layout before saving
 plt.tight_layout()
-plt.savefig('plot.png')
+plt.savefig("plot.png")
 ```
 
 ---
@@ -371,14 +374,14 @@ plt.savefig('plot.png')
 **Solution:**
 ```python
 # Increase DPI
-plt.savefig('plot.png', dpi=300)  # Default is 100
+plt.savefig("plot.png", dpi=300)  # Default is 100
 
 # For publications
-plt.savefig('plot.png', dpi=600, bbox_inches='tight')
+plt.savefig("plot.png", dpi=600, bbox_inches="tight")
 
 # Save as vector format
-plt.savefig('plot.pdf')  # Scalable!
-plt.savefig('plot.svg')  # Also scalable
+plt.savefig("plot.pdf")  # Scalable!
+plt.savefig("plot.svg")  # Also scalable
 ```
 
 ---
@@ -417,8 +420,8 @@ MemoryError
 df_small = df.sample(frac=0.1)  # 10% of data
 
 # Or use aggregation first
-df_agg = df.groupby('category')['value'].mean().reset_index()
-sns.barplot(data=df_agg, x='category', y='value')
+df_agg = df.groupby("category")["value"].mean().reset_index()
+sns.barplot(data=df_agg, x="category", y="value")
 ```
 
 ---
@@ -428,20 +431,20 @@ sns.barplot(data=df_agg, x='category', y='value')
 ### **Problem: Can't modify FacetGrid plots**
 ```python
 g = sns.relplot(...)
-plt.title('Title')  # Doesn't work!
+plt.title("Title")  # Doesn't work!
 ```
 
 **Solution:**
 ```python
 # Use FacetGrid methods
 g = sns.relplot(...)
-g.fig.suptitle('Overall Title', y=1.02)
-g.set_axis_labels('X Label', 'Y Label')
-g.set_titles('Category: {col_name}')
+g.fig.suptitle("Overall Title", y=1.02)
+g.set_axis_labels("X Label", "Y Label")
+g.set_titles("Category: {col_name}")
 
 # For individual axes
 for ax in g.axes.flat:
-    ax.set_xlabel('Custom X Label')
+    ax.set_xlabel("Custom X Label")
 ```
 
 ---
@@ -477,7 +480,7 @@ sns.relplot(data=df_filtered, ..., col='category')
 sns.heatmap(corr_matrix, annot=True)
 
 # Customize annotation format
-sns.heatmap(corr_matrix, annot=True, fmt='.2f')  # 2 decimal places
+sns.heatmap(corr_matrix, annot=True, fmt=".2f")  # 2 decimal places
 ```
 
 ---
@@ -490,10 +493,10 @@ sns.heatmap(corr_matrix, annot=True, fmt='.2f')  # 2 decimal places
 **Solution:**
 ```python
 # For correlations (-1 to 1), use diverging palette centered at 0
-sns.heatmap(corr, cmap='RdBu_r', center=0, vmin=-1, vmax=1)
+sns.heatmap(corr, cmap="RdBu_r", center=0, vmin=-1, vmax=1)
 
 # For positive-only data, use sequential
-sns.heatmap(data, cmap='Blues')
+sns.heatmap(data, cmap="Blues")
 ```
 
 ---
@@ -512,18 +515,19 @@ sns.heatmap(data, cmap='Blues')
 2. **Start simple, add complexity**
    ```python
    # Start basic
-   sns.scatterplot(data=df, x='x', y='y')
-   
+   sns.scatterplot(data=df, x="x", y="y")
+
    # Then add features one by one
-   sns.scatterplot(data=df, x='x', y='y', hue='category')
-   sns.scatterplot(data=df, x='x', y='y', hue='category', size='value')
+   sns.scatterplot(data=df, x="x", y="y", hue="category")
+   sns.scatterplot(data=df, x="x", y="y", hue="category", size="value")
    ```
 
 3. **Check Seaborn version**
    ```python
    import seaborn as sns
+
    print(sns.__version__)
-   
+
    # Upgrade if needed
    # pip install --upgrade seaborn
    ```
@@ -531,6 +535,7 @@ sns.heatmap(data, cmap='Blues')
 4. **Reset matplotlib settings**
    ```python
    import matplotlib.pyplot as plt
+
    plt.rcdefaults()  # Reset to defaults
    sns.set_theme()  # Reapply seaborn theme
    ```

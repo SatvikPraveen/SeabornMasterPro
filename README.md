@@ -55,7 +55,7 @@ import seabornmasterpro as smp
 from seabornmasterpro import annotate, datasets, stats, theme
 
 rng = smp.set_seed(2024)
-trial = datasets.load("clinical_trial")                      # documented synthetic RCT
+trial = datasets.load("clinical_trial")  # documented synthetic RCT
 arms = ["Placebo", "Low Dose", "High Dose"]
 
 results = stats.compare_groups(trial, "Arm", "Outcome", test="welch", correction="holm", order=arms)
@@ -65,7 +65,9 @@ with theme.journal_context("nature", columns=1):
     fig, ax = plt.subplots()
     sns.boxplot(data=trial, x="Arm", y="Outcome", order=arms, hue="Arm", legend=False, ax=ax)
     annotate.annotate_pairwise(ax, results, order=arms, show_effect=True)
-    smp.save_publication_figure(fig, "exports/figure1", formats=("png", "pdf"))   # provenance embedded
+    smp.save_publication_figure(
+        fig, "exports/figure1", formats=("png", "pdf")
+    )  # provenance embedded
 ```
 
 ```

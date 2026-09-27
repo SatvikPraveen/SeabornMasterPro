@@ -28,9 +28,9 @@ df = sns.load_dataset("tips")
 ## 🧭 Styling & Themes
 
 ```python
-sns.set_style("whitegrid")           # Themes: white, dark, ticks
-sns.set_context("notebook")          # Contexts: paper, talk, poster
-sns.set_palette("muted")             # Palettes: deep, bright, Set2...
+sns.set_style("whitegrid")  # Themes: white, dark, ticks
+sns.set_context("notebook")  # Contexts: paper, talk, poster
+sns.set_palette("muted")  # Palettes: deep, bright, Set2...
 ```
 
 ---
@@ -137,6 +137,7 @@ Or via utility:
 
 ```python
 from plot_utils import save_fig
+
 save_fig("exports/01_intro/plot.png")
 ```
 
@@ -146,6 +147,7 @@ save_fig("exports/01_intro/plot.png")
 
 ```python
 from plot_utils import format_date_axis
+
 format_date_axis(date_format="%b %Y", major_locator="month")
 ```
 
