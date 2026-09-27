@@ -21,8 +21,8 @@ import seaborn as sns
 from scipy import stats
 
 # Add utils to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "utils"))
-from plot_utils import apply_theme, stylize_plot, save_fig, add_statistical_annotations
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from seabornmasterpro import apply_theme, stylize_plot, save_fig, add_statistical_annotations
 
 
 def create_comparison_plots(data: pd.DataFrame, output_dir: Path, ci: int = 95):
@@ -42,8 +42,10 @@ def create_comparison_plots(data: pd.DataFrame, output_dir: Path, ci: int = 95):
             x='Category',
             y='Value',
             estimator=estimator,
-            ci=ci,
+            errorbar=("ci", ci),
             ax=ax,
+            hue='Category',
+            legend=False,
             palette='Set2'
         )
         ax.set_title(f"{name} Estimator", fontweight='bold')
@@ -70,9 +72,9 @@ def create_errorbar_comparison(data: pd.DataFrame, output_dir: Path):
     
     for ax, error_type in zip(axes, error_types):
         if error_type == 'ci':
-            sns.barplot(data=data, x='Category', y='Value', ci=95, ax=ax, palette='viridis')
+            sns.barplot(data=data, x='Category', y='Value', errorbar=("ci", 95), ax=ax, hue='Category', legend=False, palette='viridis')
         else:
-            sns.barplot(data=data, x='Category', y='Value', errorbar=error_type, ax=ax, palette='viridis')
+            sns.barplot(data=data, x='Category', y='Value', errorbar=error_type, ax=ax, hue='Category', legend=False, palette='viridis')
         
         ax.set_title(error_names[error_type], fontweight='bold')
         ax.tick_params(axis='x', rotation=45)
@@ -177,7 +179,9 @@ def create_statistical_annotations_demo(data: pd.DataFrame, output_dir: Path):
         data=data,
         x='Category',
         y='Value',
-        ci=95,
+        errorbar=("ci", 95),
+        hue='Category',
+        legend=False,
         palette='Set1',
         ax=ax
     )
@@ -222,8 +226,10 @@ def create_custom_estimator_demo(data: pd.DataFrame, output_dir: Path):
             x='Category',
             y='Value',
             estimator=func,
-            ci=None,
+            errorbar=None,
             ax=ax,
+            hue='Category',
+            legend=False,
             palette='rocket'
         )
         ax.set_title(name, fontweight='bold')

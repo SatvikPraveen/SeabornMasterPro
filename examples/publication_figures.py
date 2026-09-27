@@ -22,8 +22,8 @@ import seaborn as sns
 from matplotlib import rcParams
 
 # Add utils to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "utils"))
-from plot_utils import apply_theme, stylize_plot, save_publication_figure
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from seabornmasterpro import apply_theme, stylize_plot, save_publication_figure
 
 
 # Publication size presets (width, height) in inches
@@ -140,7 +140,7 @@ def create_journal_multiplot(data: pd.DataFrame, output_dir: Path,
     
     # Panel B: Box plot
     ax = axes[0, 1]
-    sns.boxplot(data=data, x='day', y='total_bill', ax=ax, palette='Set2')
+    sns.boxplot(data=data, x='day', y='total_bill', ax=ax, hue='day', legend=False, palette='Set2')
     ax.set_xlabel('Day of Week')
     ax.set_ylabel('Total Bill ($)')
     ax.tick_params(axis='x', rotation=45)
@@ -149,7 +149,7 @@ def create_journal_multiplot(data: pd.DataFrame, output_dir: Path,
     
     # Panel C: Violin plot
     ax = axes[1, 0]
-    sns.violinplot(data=data, x='time', y='tip', ax=ax, palette='muted')
+    sns.violinplot(data=data, x='time', y='tip', ax=ax, hue='time', legend=False, palette='muted')
     ax.set_xlabel('Time of Day')
     ax.set_ylabel('Tip ($)')
     ax.text(0.05, 0.95, 'C', transform=ax.transAxes, fontsize=14,
@@ -186,8 +186,10 @@ def create_journal_barplot(data: pd.DataFrame, output_dir: Path,
         data=data,
         x='day',
         y='total_bill',
-        ci=95,
+        errorbar=("ci", 95),
         ax=ax,
+        hue='day',
+        legend=False,
         palette='colorblind',
         edgecolor='black',
         linewidth=0.5

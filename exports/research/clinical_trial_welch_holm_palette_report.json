@@ -1,0 +1,22 @@
+{
+  "n_colors": 3,
+  "min_delta_e": 69.29531799929507,
+  "closest_pair": [
+    0,
+    2
+  ],
+  "min_delta_e_cvd": {
+    "protanopia": 46.81988863328648,
+    "deuteranopia": 55.1410929531845,
+    "tritanopia": 16.628354430627745
+  },
+  "min_contrast_on_white": 2.6128844456486493,
+  "min_contrast_on_black": 4.096454626497776,
+  "threshold": 10.0,
+  "distinguishable": true,
+  "contrast_ok": false,
+  "passes": false,
+  "warnings": [
+    "minimum contrast against background is 2.61:1 (< 3.0:1)"
+  ]
+}

@@ -14,6 +14,7 @@ Usage:
 import sys
 from pathlib import Path
 import argparse
+import json
 import logging
 from typing import Optional, List
 import pandas as pd
@@ -22,8 +23,8 @@ import seaborn as sns
 from matplotlib.figure import Figure
 
 # Add utils to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "utils"))
-from plot_utils import (
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from seabornmasterpro import (
     apply_theme,
     stylize_plot,
     save_fig,
@@ -251,13 +252,13 @@ class VisualizationPipeline:
         fig, ax = plt.subplots(figsize=(10, 6))
         
         if kind == 'bar':
-            sns.barplot(data=self.data, x=x, y=y, ci=95, ax=ax)
+            sns.barplot(data=self.data, x=x, y=y, errorbar=("ci", 95), ax=ax)
         elif kind == 'box':
             sns.boxplot(data=self.data, x=x, y=y, ax=ax)
         elif kind == 'violin':
             sns.violinplot(data=self.data, x=x, y=y, ax=ax)
         elif kind == 'point':
-            sns.pointplot(data=self.data, x=x, y=y, ci=95, ax=ax)
+            sns.pointplot(data=self.data, x=x, y=y, errorbar=("ci", 95), ax=ax)
         else:
             raise ValueError(f"Unknown plot kind: {kind}")
         
@@ -345,8 +346,11 @@ class VisualizationPipeline:
             'numeric_summary': self.data.describe().to_dict()
         }
         
-        export_plot_data(None, summary, str(self.output_dir / f"{filename}.json"), 'json')
-        logger.info(f"Summary exported to {filename}.json")
+        out = self.output_dir / f"{filename}.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        with open(out, "w", encoding="utf-8") as fh:
+            json.dump(summary, fh, indent=2, default=str)
+        logger.info(f"Summary exported to {out.name}")
 
 
 def main():
