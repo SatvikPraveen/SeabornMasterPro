@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use SeabornMasterPro in research, please cite it as below."
+title: "SeabornMasterPro: research-grade statistical visualization on top of Seaborn"
+type: software
+version: 2.0.0
+date-released: 2026-09-27
+license: GPL-3.0-or-later
+repository-code: "https://github.com/SatvikPraveen/SeabornMasterPro"
+url: "https://github.com/SatvikPraveen/SeabornMasterPro"
+authors:
+  - family-names: Praveen
+    given-names: Satvik
+    email: satvikpraveen707@gmail.com
+keywords:
+  - seaborn
+  - matplotlib
+  - statistical visualization
+  - reproducibility
+  - effect sizes
+  - bootstrap
+  - colour vision deficiency
+  - publication figures
+abstract: >-
+  SeabornMasterPro is a typed Python package and eleven-notebook curriculum for
+  producing publication-quality statistical graphics with Seaborn. It adds bootstrap
+  confidence intervals, effect sizes with multiplicity-corrected pairwise tests,
+  colour-vision-deficiency palette validation, journal-specific figure geometry, and
+  provenance embedded in exported figures, together with deterministic synthetic
+  datasets described by data cards and verified by a SHA-256 manifest.
+references:
+  - type: article
+    title: "seaborn: statistical data visualization"
+    authors:
+      - family-names: Waskom
+        given-names: Michael L.
+    journal: Journal of Open Source Software
+    volume: 6
+    issue: 60
+    year: 2021
+    doi: 10.21105/joss.03021

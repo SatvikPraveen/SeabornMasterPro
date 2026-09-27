@@ -5,6 +5,63 @@ All notable changes to the SeabornMasterPro project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-09-27
+
+### Added - Research-grade release
+
+#### `seabornmasterpro` package (typed, `py.typed`, installable with `pip install -e ".[all]"`)
+- **`stats`**: `bootstrap_ci` (percentile / basic / BCa), `group_summary`, `cohens_d`, `hedges_g`,
+  `glass_delta`, `cliffs_delta`, `interpret_effect_size`, `permutation_test` (Phipson–Smyth +1
+  correction), `adjust_pvalues` (Bonferroni, Holm, Benjamini–Hochberg) and `compare_groups`
+  (Welch / Student / Mann–Whitney / permutation with multiplicity correction and effect sizes).
+- **`color`**: Machado et al. (2009) colour-vision-deficiency simulation, CIE76 ΔE*ab distances,
+  WCAG 2.1 contrast, `validate_palette` reports and `cvd_palette_grid`.
+- **`theme`**: `JournalSpec` presets for Nature, Science, IEEE, Elsevier, PLOS, ACM, presentation
+  and poster; `publication_rc`, `journal_context`, `figsize_for`.
+- **`io`**: `save_fig` and `save_publication_figure` embed a JSON provenance record (versions,
+  platform, git revision, timestamp) in PNG/PDF/SVG metadata; optional JSON sidecars.
+- **`annotate`**: `annotate_pairwise` stacks significance brackets from `compare_groups` output;
+  `annotate_effect_sizes` prints estimates and CIs under categories.
+- **`layout`**: `label_panels` for (A), (B), … panel letters; typed `plot_comparison`,
+  `create_plot_grid`, `format_date_axis`.
+- **`repro`**: `set_seed`, `capture_environment`, `git_revision`, SHA-256 `write_manifest` /
+  `verify_manifest`.
+- **`datasets`**: registry of `DatasetCard`s; the six legacy tables are regenerated bit-for-bit and
+  three research datasets with known ground truth were added (`clinical_trial`,
+  `sensor_readings`, `gene_expression`). `smp-datasets` CLI and `datasets/MANIFEST.json`.
+- **`benchmark`**: timing harness for Seaborn functions across sample sizes; `smp-benchmark` CLI.
+
+#### Curriculum and docs
+- **`notebooks/11_research_workflow.ipynb`**: data cards → bootstrap CIs → Holm-corrected pairwise
+  tests with effect-size brackets → robustness across tests → CVD palette validation → Nature
+  double-column figure with embedded provenance → anomaly time series → expression clustermap →
+  manifest verification.
+- **`docs/methodology.md`**: every estimator, its published definition and how it is tested.
+- **`docs/api_reference.md`**: generated from the package docstrings.
+- `CITATION.cff` for software citation.
+
+#### Engineering
+- `pyproject.toml` packaging (PEP 621) replaces `setup.py` / `pytest.ini`; ruff, mypy, pre-commit.
+- Test suite rewritten: 125+ unit and property-based (Hypothesis) tests for every module, a
+  Streamlit `AppTest`, and an opt-in notebook execution suite (`pytest -m notebooks`).
+- GitHub Actions: lint + type-check, a 12-way OS × Python matrix, byte-for-byte dataset
+  regeneration, manifest verification, example-script execution, notebook execution and a
+  build/twine check.
+- Multi-stage Dockerfile on Python 3.12 with a non-root user and healthcheck.
+
+### Changed
+- Example scripts import from `seabornmasterpro`, use the Seaborn 0.13 API (`errorbar=` instead of
+  `ci=`), accept `--output`, and use journal presets, corrected pairwise tests, palette validation
+  and provenance-embedding export.
+- Streamlit app rebuilt as a research explorer (gallery, dataset cards, group comparison, palette
+  accessibility, environment).
+- `utils/plot_utils.py` is now a thin backward-compatible facade; notebooks 01–10 run unchanged.
+- Minimum Python is 3.10; Seaborn ≥ 0.13.
+
+### Removed
+- `setup.py`, `pytest.ini`, pinned `requirements_dev.txt` lock (replaced by extras in
+  `pyproject.toml`).
+
 ## [1.0.0] - 2024
 
 ### Added - Comprehensive Enhancement Release
