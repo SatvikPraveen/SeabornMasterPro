@@ -20,6 +20,7 @@ from __future__ import annotations
 from seabornmasterpro.annotate import (
     add_reference_line,
     add_statistical_annotations,
+    annotate_effect_sizes,
     annotate_pairwise,
     annotate_points,
     stylize_plot,
@@ -27,6 +28,7 @@ from seabornmasterpro.annotate import (
 from seabornmasterpro.color import (
     contrast_ratio,
     create_color_palette,
+    cvd_palette_grid,
     simulate_cvd,
     validate_palette,
 )
@@ -36,56 +38,69 @@ from seabornmasterpro.io import (
     save_fig,
     save_publication_figure,
 )
-from seabornmasterpro.layout import create_plot_grid, format_date_axis, plot_comparison
-from seabornmasterpro.repro import capture_environment, set_seed
+from seabornmasterpro.layout import (
+    create_plot_grid,
+    format_date_axis,
+    label_panels,
+    plot_comparison,
+)
+from seabornmasterpro.repro import capture_environment, set_seed, verify_manifest, write_manifest
 from seabornmasterpro.stats import (
     bootstrap_ci,
     cliffs_delta,
     cohens_d,
     compare_groups,
+    group_summary,
     hedges_g,
     p_to_stars,
     permutation_test,
 )
-from seabornmasterpro.theme import apply_theme, journal_context, publication_rc
+from seabornmasterpro.theme import (
+    JOURNALS,
+    apply_theme,
+    figsize_for,
+    journal_context,
+    publication_rc,
+)
 
 __version__ = "2.0.0"
 
 __all__ = [
+    "JOURNALS",
     "__version__",
     "add_reference_line",
     "add_statistical_annotations",
+    "annotate_effect_sizes",
     "annotate_pairwise",
     "annotate_points",
-    # theme
     "apply_theme",
-    # stats
     "bootstrap_ci",
     "capture_environment",
     "cliffs_delta",
     "cohens_d",
     "compare_groups",
     "contrast_ratio",
-    # color
     "create_color_palette",
     "create_plot_grid",
+    "cvd_palette_grid",
     "export_plot_data",
+    "figsize_for",
     "figure_provenance",
     "format_date_axis",
+    "group_summary",
     "hedges_g",
     "journal_context",
+    "label_panels",
     "p_to_stars",
     "permutation_test",
-    # layout
     "plot_comparison",
     "publication_rc",
-    # io
     "save_fig",
     "save_publication_figure",
-    # repro
     "set_seed",
     "simulate_cvd",
-    # annotate
     "stylize_plot",
     "validate_palette",
+    "verify_manifest",
+    "write_manifest",
 ]

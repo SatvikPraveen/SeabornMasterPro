@@ -6,7 +6,10 @@ The most common helpers are re-exported at the top level:
 
 ```python
 import seabornmasterpro as smp
-smp.apply_theme(); smp.set_seed(0); smp.compare_groups(df, 'group', 'value')
+
+smp.apply_theme()
+smp.set_seed(0)
+smp.compare_groups(df, "group", "value")
 ```
 
 ## Modules
@@ -175,7 +178,7 @@ Returns
 pathlib.Path
     The written file.
 
-### `save_publication_figure(fig: 'Figure', filename: 'PathType', formats: 'Iterable[str]' = ('png', 'pdf'), dpi: 'int' = 600, transparent: 'bool' = False, *, provenance: 'bool' = True, verbose: 'bool' = True) -> 'list[Path]'`
+### `save_publication_figure(fig: 'Figure', filename: 'PathType', formats: 'Iterable[str]' = ('png', 'pdf'), dpi: 'int' = 600, transparent: 'bool' = False, *, provenance: 'bool' = True, sidecar: 'bool' = False, title: 'str | None' = None, verbose: 'bool' = True) -> 'list[Path]'`
 
 Save a figure in several formats for submission.
 
@@ -193,6 +196,10 @@ transparent
     Transparent background.
 provenance
     Embed provenance metadata where the format supports it.
+sidecar
+    Also write ``<file>.<ext>.json`` with the provenance record for each format.
+title
+    Optional title stored in the file metadata.
 
 ## `seabornmasterpro.stats`
 
@@ -260,7 +267,7 @@ method
     ``none``, ``bonferroni``, ``holm`` (step-down, controls FWER) or ``fdr_bh``
     (Benjamini-Hochberg, controls FDR).
 
-### `bootstrap_ci(data: 'Sequence[float] | np.ndarray | pd.Series', statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x101f245f0>, *, confidence: 'float' = 0.95, n_boot: 'int' = 2000, method: "Literal['percentile', 'basic', 'bca']" = 'percentile', seed: 'int | np.random.Generator | None' = 0) -> 'BootstrapResult'`
+### `bootstrap_ci(data: 'Sequence[float] | np.ndarray | pd.Series', statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x11088c470>, *, confidence: 'float' = 0.95, n_boot: 'int' = 2000, method: "Literal['percentile', 'basic', 'bca']" = 'percentile', seed: 'int | np.random.Generator | None' = 0) -> 'BootstrapResult'`
 
 Non-parametric bootstrap confidence interval for a univariate statistic.
 
@@ -321,7 +328,7 @@ pandas.DataFrame
 
 Glass's Δ: mean difference standardised by the *control* group's SD.
 
-### `group_summary(data: 'pd.DataFrame', x: 'str', y: 'str', *, statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x101f245f0>, confidence: 'float' = 0.95, n_boot: 'int' = 2000, seed: 'int | np.random.Generator | None' = 0) -> 'pd.DataFrame'`
+### `group_summary(data: 'pd.DataFrame', x: 'str', y: 'str', *, statistic: 'Callable[[np.ndarray], float]' = <function mean at 0x11088c470>, confidence: 'float' = 0.95, n_boot: 'int' = 2000, seed: 'int | np.random.Generator | None' = 0) -> 'pd.DataFrame'`
 
 Per-group estimate with bootstrap CI, ready to plot as error bars.
 
@@ -363,7 +370,7 @@ Draw a single significance bracket between two x positions.
 
 Print estimate and CI beneath each category using :func:`seabornmasterpro.stats.group_summary` output.
 
-### `annotate_pairwise(ax: 'Axes', results: 'pd.DataFrame', *, order: 'Sequence[str] | None' = None, p_column: 'str' = 'p_adjusted', only_significant: 'bool' = False, show_effect: 'bool' = False, fontsize: 'float' = 10, line_offset: 'float' = 0.05, line_height: 'float' = 0.02, text_gap: 'float' = 0.005) -> 'Axes'`
+### `annotate_pairwise(ax: 'Axes', results: 'pd.DataFrame', *, order: 'Sequence[str] | None' = None, p_column: 'str' = 'p_adjusted', only_significant: 'bool' = False, alpha: 'float' = 0.05, show_effect: 'bool' = False, fontsize: 'float' = 10, line_offset: 'float' = 0.05, line_height: 'float' = 0.02, text_gap: 'float' = 0.005) -> 'Axes'`
 
 Stack significance brackets for the output of :func:`seabornmasterpro.stats.compare_groups`.
 
@@ -380,7 +387,9 @@ results
 order
     Category order on the x axis; inferred from tick labels when omitted.
 only_significant
-    Skip pairs with p >= 0.05.
+    Skip pairs with adjusted p >= ``alpha``.
+alpha
+    Significance level used by ``only_significant``.
 show_effect
     Append the effect size (e.g. ``g=0.52``) to the star label.
 
@@ -436,7 +445,8 @@ Generate a palette by explicit colours or by semantic type.
 Parameters
 ----------
 colors
-    Explicit colour list (names or hex); takes precedence.
+    Explicit colour list (names or hex); takes precedence. Passing one of the
+    ``palette_type`` names here is accepted as a convenience (``create_color_palette("sequential", 8)``).
 n_colors
     Number of colours to return.
 palette_type

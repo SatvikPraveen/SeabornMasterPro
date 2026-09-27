@@ -109,6 +109,7 @@ def annotate_pairwise(
     order: Sequence[str] | None = None,
     p_column: str = "p_adjusted",
     only_significant: bool = False,
+    alpha: float = 0.05,
     show_effect: bool = False,
     fontsize: float = 10,
     line_offset: float = 0.05,
@@ -130,7 +131,9 @@ def annotate_pairwise(
     order
         Category order on the x axis; inferred from tick labels when omitted.
     only_significant
-        Skip pairs with p >= 0.05.
+        Skip pairs with adjusted p >= ``alpha``.
+    alpha
+        Significance level used by ``only_significant``.
     show_effect
         Append the effect size (e.g. ``g=0.52``) to the star label.
     """
@@ -141,7 +144,7 @@ def annotate_pairwise(
     span = y1 - y0
     rows = results.copy()
     if only_significant:
-        rows = rows[rows[p_column] < 0.05]
+        rows = rows[rows[p_column] < alpha]
     if rows.empty:
         return ax
     rows["_span"] = [

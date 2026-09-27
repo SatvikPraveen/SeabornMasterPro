@@ -119,6 +119,8 @@ def save_publication_figure(
     transparent: bool = False,
     *,
     provenance: bool = True,
+    sidecar: bool = False,
+    title: str | None = None,
     verbose: bool = True,
 ) -> list[Path]:
     """Save a figure in several formats for submission.
@@ -137,6 +139,10 @@ def save_publication_figure(
         Transparent background.
     provenance
         Embed provenance metadata where the format supports it.
+    sidecar
+        Also write ``<file>.<ext>.json`` with the provenance record for each format.
+    title
+        Optional title stored in the file metadata.
     """
     base = Path(filename)
     written: list[Path] = []
@@ -148,6 +154,8 @@ def save_publication_figure(
                 dpi=dpi,
                 fig=fig,
                 provenance=provenance,
+                sidecar=sidecar,
+                title=title,
                 transparent=transparent,
                 verbose=verbose,
                 format=fmt,

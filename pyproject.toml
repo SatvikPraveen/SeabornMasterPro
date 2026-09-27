@@ -106,7 +106,6 @@ select = ["E", "F", "W", "I", "UP", "B", "NPY", "PD", "RUF", "D"]
 ignore = [
   "D100", "D104", "D105", "D107",  # module/package/magic docstrings
   "D203", "D213",                  # numpydoc-compatible spacing
-  "PD901",                         # `df` is fine
   "RUF001", "RUF002", "RUF003",    # allow unicode in docs/prints
   "E501",                          # formatter handles line length
 ]

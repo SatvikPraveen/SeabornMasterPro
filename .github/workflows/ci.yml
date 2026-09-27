@@ -86,7 +86,7 @@ jobs:
       - name: Example scripts run
         run: |
           set -e
-          for s in basic_workflow production_dashboard custom_styling statistical_viz batch_processing publication_figures; do
+          for s in basic_workflow production_dashboard custom_styling statistical_viz batch_processing publication_figures research_figure; do
             echo "::group::$s"
             python -W error::FutureWarning examples/$s.py --output /tmp/examples/$s
             echo "::endgroup::"

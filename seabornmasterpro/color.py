@@ -82,13 +82,16 @@ def create_color_palette(
     Parameters
     ----------
     colors
-        Explicit colour list (names or hex); takes precedence.
+        Explicit colour list (names or hex); takes precedence. Passing one of the
+        ``palette_type`` names here is accepted as a convenience (``create_color_palette("sequential", 8)``).
     n_colors
         Number of colours to return.
     palette_type
         ``qualitative`` (colorblind), ``sequential`` (viridis) or ``diverging`` (RdBu_r).
         The defaults are chosen to be colour-vision-deficiency safe.
     """
+    if isinstance(colors, str) and colors in {"qualitative", "sequential", "diverging"}:
+        palette_type, colors = colors, None
     if colors:
         return list(sns.color_palette(list(colors), n_colors=n_colors))
     if palette_type == "sequential":
