@@ -18,6 +18,7 @@ This matrix shows which Seaborn features are covered in each notebook.
 | **08** | Advanced Categorical | Advanced | `barplot()`, custom estimators, statistical annotations |
 | **09** | Styling & Customization | Advanced | Themes, palettes, custom colors, color theory |
 | **10** | Statistical Parameters | Advanced | `estimator`, `errorbar`, custom aggregations |
+| **11** | Research Workflow | Research | bootstrap CIs, effect sizes, Holm-corrected pairwise tests, CVD palette validation, journal presets, provenance, manifests |
 
 ---
 
@@ -117,6 +118,7 @@ This matrix shows which Seaborn features are covered in each notebook.
 10. Notebook 08: Advanced Categorical
 11. Notebook 09: Styling & Customization
 12. Notebook 10: Statistical Parameters
+13. Notebook 11: Research Workflow (end-to-end publication pipeline)
 
 ---
 
