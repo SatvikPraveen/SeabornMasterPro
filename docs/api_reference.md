@@ -6,7 +6,10 @@ The most common helpers are re-exported at the top level:
 
 ```python
 import seabornmasterpro as smp
-smp.apply_theme(); smp.set_seed(0); smp.compare_groups(df, 'group', 'value')
+
+smp.apply_theme()
+smp.set_seed(0)
+smp.compare_groups(df, "group", "value")
 ```
 
 ## Modules
