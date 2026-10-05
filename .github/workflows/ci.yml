@@ -54,7 +54,7 @@ jobs:
         run: pytest --cov --cov-report=xml --cov-report=term -m "not notebooks"
       - name: Upload coverage
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
