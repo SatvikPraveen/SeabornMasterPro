@@ -37,6 +37,9 @@ jobs:
   test:
     name: Tests (${{ matrix.os }}, py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      id-token: write  # tokenless Codecov upload via OIDC
     strategy:
       fail-fast: false
       matrix:
@@ -56,9 +59,16 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         uses: codecov/codecov-action@v7
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           files: ./coverage.xml
           fail_ci_if_error: false
+      - name: Upload coverage report artifact
+        if: always() && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage.xml
+          if-no-files-found: warn
 
   reproducibility:
     name: Data manifest & examples
